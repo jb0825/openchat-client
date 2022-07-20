@@ -1,0 +1,43 @@
+#home {
+  background-color: #ffee1f;
+  position: relative;
+}
+#home .logo {
+  width: 150px;
+  height: 150px;
+  top: 30%;
+  left: 33%;
+  position: absolute;
+}
+#home .btn {
+  top: 80%;
+  left: 40%;
+  font-size: 13px;
+  color: blue;
+  text-decoration: underline;
+  position: absolute;
+}
+#home .btn a:visited, #home .btn a:link, #home .btn a:active {
+  color: blue;
+}
+#home .gitIcon {
+  position: absolute;
+  top: 85%;
+  left: 29%;
+}
+#home .gitIcon img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  display: inline-block;
+}
+#home .gitIcon a {
+  display: inline-block;
+  font-size: 13px;
+  padding-left: 7px;
+}
+#home .gitIcon a:visited, #home .gitIcon a:link, #home .gitIcon a:active {
+  color: black;
+}
+
+/*# sourceMappingURL=home.css.map */

@@ -1,0 +1,48 @@
+@import "var.scss";
+
+#home {
+    background-color: $yellow;
+    position: relative;
+
+    .logo {
+        width: 150px;
+        height: 150px;
+        top: 30%;
+        left: 33%;
+        position: absolute;
+    }
+
+    .btn {
+        top: 80%;
+        left: 40%;
+        font-size: $font-size;
+        color: blue;
+        text-decoration: underline;
+        position: absolute;
+
+        a:visited, a:link, a:active {
+            color: blue;
+        }
+    }
+
+    .gitIcon {
+        position: absolute;
+        top: 85%;
+        left: 29%;
+
+        img {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+        a {
+            display: inline-block;
+            font-size: $font-size;
+            padding-left: 7px;
+            &:visited, &:link, &:active {
+                color: black;
+            }
+        }
+    }
+}

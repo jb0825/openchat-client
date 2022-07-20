@@ -1,0 +1,40 @@
+#login {
+  background-color: #98998f;
+}
+#login .img {
+  height: 450px;
+  position: relative;
+}
+#login .img img {
+  position: absolute;
+  bottom: 0%;
+  left: 35%;
+  border-radius: 50%;
+}
+#login .form {
+  text-align: center;
+  padding: 40px 0px;
+  margin: 0 -30px;
+  margin-top: 40px;
+  border-top: 1px solid #bbbbbb;
+}
+#login .form input, #login .form button {
+  vertical-align: middle;
+}
+#login .form input {
+  padding: 10px 15px;
+  border-radius: 3px;
+  width: 137px;
+}
+#login .form button {
+  background-color: #342a2a;
+  margin-left: 5px;
+  padding: 4px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+#login .form button .done {
+  fill: white;
+}
+
+/*# sourceMappingURL=login.css.map */
