@@ -9,6 +9,24 @@ import Setting from "assets/svg/Setting";
 import defaultUser from "assets/img/default_user.jpg";
 
 export default function List() {
+  const temp = () => {
+    const list = [];
+    for (let i = 0; i < 10; i++) {
+      list.push(
+        <li>
+          <img src={defaultUser} alt="" />
+          <div className="info">
+            <div>방이름</div>
+            <p>설명</p>
+          </div>
+          <div className="time">오후 12:00</div>
+        </li>
+      );
+    }
+
+    return list;
+  };
+
   return (
     <div id="list" className="page">
       <nav>
@@ -48,32 +66,7 @@ export default function List() {
         </header>
 
         <article>
-          <ul>
-            <li>
-              <img src={defaultUser} alt="" />
-              <div className="info">
-                <div>방이름</div>
-                <p>설명</p>
-              </div>
-              <div className="time">오후 12:00</div>
-            </li>
-            <li>
-              <img src={defaultUser} alt="" />
-              <div className="info">
-                <div>방이름</div>
-                <p>설명</p>
-              </div>
-              <div className="time">오후 12:00</div>
-            </li>
-            <li>
-              <img src={defaultUser} alt="" />
-              <div className="info">
-                <div>방이름</div>
-                <p>설명</p>
-              </div>
-              <div className="time">오후 12:00</div>
-            </li>
-          </ul>
+          <ul>{temp()}</ul>
         </article>
       </section>
     </div>
