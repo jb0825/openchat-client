@@ -1,0 +1,108 @@
+#list {
+  padding: unset;
+}
+#list > nav {
+  width: 80px;
+  height: 650px;
+  padding: 50px 20px;
+  background-color: #ebebeb;
+  position: fixed;
+}
+#list > nav svg {
+  fill: #bbbbbb;
+  cursor: pointer;
+}
+#list > nav .chat {
+  margin: 30px 0 15px 0;
+}
+#list > nav .nav :hover {
+  fill: #98998f;
+}
+#list > nav .bottom {
+  position: absolute;
+  left: 28px;
+  bottom: 35px;
+  text-align: center;
+}
+#list > nav .bottom svg {
+  fill: #404040;
+  margin-bottom: 20px;
+}
+#list > section {
+  width: 320px;
+  height: 100%;
+  padding: 50px 20px;
+  margin-left: 80px;
+}
+#list > section header {
+  width: 278px;
+  display: flex;
+  position: fixed;
+}
+#list > section header h2 {
+  flex-basis: 30%;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 24px;
+}
+#list > section header .icons {
+  flex-basis: 70%;
+  text-align: right;
+}
+#list > section header .icons li {
+  display: inline-block;
+  margin-left: 10px;
+  cursor: pointer;
+}
+#list > section article {
+  height: 565px;
+  margin: -21px;
+  margin-top: 31px;
+  margin-right: -16px;
+  padding-top: 15px;
+  overflow-y: scroll;
+  scrollbar-color: #bbbbbb;
+}
+#list > section article::-webkit-scrollbar {
+  width: 8px;
+}
+#list > section article::-webkit-scrollbar-track {
+  background-color: #ebebeb;
+  border-radius: 100px;
+}
+#list > section article::-webkit-scrollbar-thumb {
+  background-color: #bbbbbb;
+  border-radius: 100px;
+}
+#list > section article ul li {
+  padding: 10px 0;
+  padding-left: 15px;
+  display: flex;
+}
+#list > section article ul li:hover {
+  background-color: #f3f3f3;
+}
+#list > section article ul li img {
+  width: 50px;
+  border-radius: 20px;
+}
+#list > section article ul li .info {
+  margin-left: 10px;
+  width: 55%;
+}
+#list > section article ul li .info div {
+  font-weight: bold;
+  padding: 5px 0;
+  cursor: pointer;
+}
+#list > section article ul li .info p {
+  color: #585853;
+  line-height: 20px;
+}
+#list > section article ul li .time {
+  text-align: right;
+  color: #98998f;
+  padding: 5px 0;
+}
+
+/*# sourceMappingURL=list.css.map */

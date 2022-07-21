@@ -2,7 +2,7 @@ import "assets/style/css/app.css";
 import { NavLink, Route, Routes } from "react-router-dom";
 import { links, routes } from "routes";
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       <div id="main">
@@ -22,5 +22,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

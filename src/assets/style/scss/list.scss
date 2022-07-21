@@ -1,0 +1,132 @@
+@import "var.scss";
+
+#list {
+    padding: unset;
+
+    //* { border: 1px solid blue; }
+
+    & > nav {
+        width: 80px;
+        height: 650px;
+        padding: 50px 20px;
+        background-color: $lightgray;
+        position: fixed;
+
+        svg {
+            fill: $gray;
+            cursor: pointer;
+        }
+
+        .chat {
+            margin: 30px 0 15px 0;
+        }
+
+        .nav {
+            :hover {
+                fill: $gray-opacity;
+            }
+        }
+
+        .bottom {
+            position: absolute;
+            left: 28px;
+            bottom: 35px;
+            text-align: center;
+
+            svg {
+                fill: $darkgray;
+                margin-bottom: 20px;
+            }
+        }
+
+    }
+
+    & > section {
+        width: 320px;
+        height: 100%;
+        padding: 50px 20px;
+        margin-left: 80px;
+
+        header {
+            width: 278px;
+            display: flex;
+            position: fixed;
+            h2 {
+                flex-basis: 30%;
+                font-size: 15px;
+                font-weight: bold;
+                line-height: 24px;
+            }
+            .icons {
+                flex-basis: 70%;
+                text-align: right;
+                li {
+                    display: inline-block;
+                    margin-left: 10px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        article {
+            height: 565px;
+            margin: -21px;
+            margin-top: 31px;
+            margin-right: -16px;
+            padding-top: 15px;
+            overflow-y: scroll;
+
+            scrollbar-color: $gray;
+
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+            &::-webkit-scrollbar-track {
+                background-color: $lightgray;
+                border-radius: 100px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background-color: $gray;
+                border-radius: 100px;
+            }
+
+            ul {
+                li {
+                    padding: 10px 0;
+                    padding-left: 15px;
+                    display: flex;
+                    
+
+                    &:hover {
+                        background-color: #f3f3f3;
+                    }
+
+                    img { 
+                        width: 50px;
+                        border-radius: 20px;
+                    }
+                    .info {
+                        margin-left: 10px;
+                        width: 55%;
+
+                        div { 
+                            font-weight: bold;
+                            padding: 5px 0;
+                            cursor: pointer;
+                        }
+                        p {
+                            color: $middlegray;
+                            line-height: 20px;
+                        }
+                    }
+                    .time {
+                        text-align: right;
+                        color: $gray-opacity;
+                        padding: 5px 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
