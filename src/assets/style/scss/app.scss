@@ -65,17 +65,18 @@ a:link {
     font-family: "돋움", "Dotum", "돋움체", "DotumChe";
     font-size: $font-size;
 }
+
 .App {
     display: flex;
     height: 100vh;
-}
 
-#main {
-    border-radius: 5px;
-    width: 400px;
-    height: 650px;
-    margin: auto;
-    box-shadow: 0px 0px 10px 5px #cbcbcb;
+    & > div {
+        border-radius: 5px;
+        width: 400px;
+        height: 650px;
+        margin: auto;
+        box-shadow: 0px 0px 10px 5px #cbcbcb;
+    }
 }
 
 .page {

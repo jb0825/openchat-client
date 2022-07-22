@@ -1,0 +1,45 @@
+#chatroom_info {
+  padding: unset;
+  position: relative;
+  background-color: #0000006e;
+}
+#chatroom_info .close {
+  fill: white;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+}
+#chatroom_info .info, #chatroom_info .btns, #chatroom_info > img {
+  position: absolute;
+}
+#chatroom_info > img {
+  width: 200px;
+  top: calc(50% - 100px);
+  left: calc(50% - 100px);
+  z-index: -1;
+}
+#chatroom_info .info {
+  bottom: 55px;
+  padding: 40px 30px;
+  color: white;
+}
+#chatroom_info .info * {
+  padding: 10px 0;
+}
+#chatroom_info .info h2 {
+  font-size: 20px;
+  font-weight: bold;
+}
+#chatroom_info .btns {
+  bottom: 0;
+  width: 100%;
+  height: 55px;
+  font-size: 14px;
+  text-align: center;
+  line-height: 55px;
+  background-color: #ffee1f;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=chatroomInfo.css.map */

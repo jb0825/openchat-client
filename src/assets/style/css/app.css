@@ -69,8 +69,7 @@ a:link {
   display: flex;
   height: 100vh;
 }
-
-#main {
+.App > div {
   border-radius: 5px;
   width: 400px;
   height: 650px;
