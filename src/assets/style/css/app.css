@@ -74,13 +74,17 @@ a:link {
   width: 400px;
   height: 650px;
   margin: auto;
-  box-shadow: 0px 0px 10px 5px #cbcbcb;
+  box-shadow: 0px 0px 4px 3px #cbcbcb;
+}
+.App > nav {
+  position: fixed;
 }
 
 .page {
   width: 100%;
   height: 100%;
   padding: 30px;
+  position: relative;
 }
 
 /*# sourceMappingURL=app.css.map */

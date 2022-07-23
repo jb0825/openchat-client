@@ -1,0 +1,19 @@
+#chatroom {
+  background-color: #acc6d9;
+  border: 1px solid gray;
+}
+#chatroom * {
+  border: 1px solid blue;
+}
+#chatroom .send {
+  position: fixed;
+  width: 400px;
+  height: 130px;
+  left: calc((100% - 400px) / 2);
+  bottom: calc((100% - 650px) / 2);
+  background-color: white;
+  border: 1px solid gray;
+  border-top: 1px solid #bbbbbb;
+}
+
+/*# sourceMappingURL=chatroom.css.map */

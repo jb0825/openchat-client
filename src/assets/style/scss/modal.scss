@@ -1,0 +1,75 @@
+@import "var.scss";
+
+$modal-width: 300px;
+$modal-height: 160px;
+
+.hidden {
+    display: none;
+}
+
+#modal_container {
+    position: absolute;
+    width: 400px;
+    height: 650px;
+    top: 0;
+    left: 0;
+    background-color: #0000002e;
+    border: 1px solid #b9b9b9;
+    z-index: 1;
+
+    #modal {
+        width: $modal-width;
+        height: $modal-height;
+        background-color: white;
+        position: absolute;
+        left: calc((400px - $modal-width) / 2);
+        top: calc((650px - $modal-height) / 2);
+        box-shadow: 0px 0px 4px 2px #00000054;
+
+        & > div {
+            width: 100%;
+            text-align: right;
+            padding: 5px 5px 0 0;
+            svg {
+                fill: $gray;
+                cursor: pointer;
+                &:hover { fill: $middlegray; }
+            }
+        }
+
+        section {
+            padding: 20px;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            border-top: 1px solid lightgray;
+
+            &:hover button {
+                color: black;
+            }
+            
+            button {
+                color: $darkgray;
+                background-color: unset;
+                cursor: pointer;
+                padding: 15px;
+                width: 100%;
+            }
+            .cancel { display: none; }
+        }
+
+        .cancel_visible {
+            button {
+                width: 50%;
+            }
+            .cancel { 
+                display: inline-block; 
+                border-left: 1px solid lightgray;
+            }
+        }
+    }
+}

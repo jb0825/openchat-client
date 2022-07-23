@@ -1,0 +1,67 @@
+.hidden {
+  display: none;
+}
+
+#modal_container {
+  position: absolute;
+  width: 400px;
+  height: 650px;
+  top: 0;
+  left: 0;
+  background-color: #0000002e;
+  border: 1px solid #b9b9b9;
+  z-index: 1;
+}
+#modal_container #modal {
+  width: 300px;
+  height: 160px;
+  background-color: white;
+  position: absolute;
+  left: 50px;
+  top: 245px;
+  box-shadow: 0px 0px 4px 2px #00000054;
+}
+#modal_container #modal > div {
+  width: 100%;
+  text-align: right;
+  padding: 5px 5px 0 0;
+}
+#modal_container #modal > div svg {
+  fill: #bbbbbb;
+  cursor: pointer;
+}
+#modal_container #modal > div svg:hover {
+  fill: #585853;
+}
+#modal_container #modal section {
+  padding: 20px;
+}
+#modal_container #modal footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid lightgray;
+}
+#modal_container #modal footer:hover button {
+  color: black;
+}
+#modal_container #modal footer button {
+  color: #404040;
+  background-color: unset;
+  cursor: pointer;
+  padding: 15px;
+  width: 100%;
+}
+#modal_container #modal footer .cancel {
+  display: none;
+}
+#modal_container #modal .cancel_visible button {
+  width: 50%;
+}
+#modal_container #modal .cancel_visible .cancel {
+  display: inline-block;
+  border-left: 1px solid lightgray;
+}
+
+/*# sourceMappingURL=modal.css.map */
