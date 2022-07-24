@@ -19,7 +19,7 @@ $modal-height: 160px;
 
     #modal {
         width: $modal-width;
-        height: $modal-height;
+        height: auto;
         background-color: white;
         position: absolute;
         left: calc((400px - $modal-width) / 2);
@@ -39,11 +39,11 @@ $modal-height: 160px;
 
         section {
             padding: 20px;
+            padding-bottom: 35px;
+            text-align: center;
         }
 
         footer {
-            position: absolute;
-            bottom: 0;
             width: 100%;
             text-align: center;
             border-top: 1px solid lightgray;

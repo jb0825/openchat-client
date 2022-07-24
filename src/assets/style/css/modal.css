@@ -14,7 +14,7 @@
 }
 #modal_container #modal {
   width: 300px;
-  height: 160px;
+  height: auto;
   background-color: white;
   position: absolute;
   left: 50px;
@@ -35,10 +35,10 @@
 }
 #modal_container #modal section {
   padding: 20px;
+  padding-bottom: 35px;
+  text-align: center;
 }
 #modal_container #modal footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
   text-align: center;
   border-top: 1px solid lightgray;

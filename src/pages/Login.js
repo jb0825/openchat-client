@@ -2,17 +2,25 @@ import "assets/style/css/login.css";
 import defaultUser from "assets/img/default_user.jpg";
 import Done from "assets/svg/Done.js";
 import { useEffect } from "react";
-import { useStorage } from "useStorage";
+import { useStorage } from "store/useStorage";
+import Modal, { toggle } from "components/Modal";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const { setStorage } = useStorage();
+  const navigate = useNavigate();
 
-  const handleForm = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     const input = document.querySelector("#login input");
 
     setStorage("name", input.value);
     input.value = "";
+    navigate("/list");
+  };
+
+  const handleForm = (event) => {
+    event.preventDefault();
+    toggle();
   };
 
   useEffect(() => {
@@ -24,6 +32,7 @@ export default function Login() {
 
   return (
     <div id="login" className="page">
+      <Modal cancel="true" content="해당 이름을 사용하시겠습니까?" action={handleSubmit} />
       <section className="img">
         <img src={defaultUser} alt=""></img>
       </section>
