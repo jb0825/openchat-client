@@ -7,13 +7,13 @@ import Modal, { toggle } from "components/Modal";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { setStorage } = useStorage();
+  const { set } = useStorage();
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     const input = document.querySelector("#login input");
 
-    setStorage("name", input.value);
+    set("name", input.value);
     input.value = "";
     navigate("/list");
   };

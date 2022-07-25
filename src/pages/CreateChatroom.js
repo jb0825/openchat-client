@@ -1,7 +1,10 @@
 import "assets/style/css/createChatroom.css";
 import Modal, { toggle } from "components/Modal";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateChatroom() {
+  const navigate = useNavigate();
+
   const handleInput = (event) => {
     const length = event.target.value.length;
     const label = event.target.nextElementSibling;
@@ -9,8 +12,17 @@ export default function CreateChatroom() {
     label.innerText = `${length}/${label.dataset.max}`;
   };
 
+  const handleOkButton = () => {
+    const input = document.getElementById("chatroom_name");
+
+    if (input.value.length === 0) return;
+    toggle();
+  };
+
   const handleCreate = () => {
     console.log("create!");
+    toggle();
+    navigate("/list");
   };
 
   return (
@@ -56,10 +68,12 @@ export default function CreateChatroom() {
       </section>
 
       <section className="btns">
-        <button className="ok" onClick={toggle}>
+        <button className="ok" onClick={handleOkButton}>
           확인
         </button>
-        <button className="cancel">취소</button>
+        <button className="cancel" onClick={() => navigate("/list")}>
+          취소
+        </button>
       </section>
     </div>
   );

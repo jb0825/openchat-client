@@ -7,13 +7,17 @@ import Person from "assets/svg/Person";
 import Search from "assets/svg/Search";
 import Setting from "assets/svg/Setting";
 import defaultUser from "assets/img/default_user.jpg";
+import { useNavigate } from "react-router-dom";
 
 export default function List() {
+  const navigate = useNavigate();
+  const handleAddChat = () => navigate("/create_chatroom");
+
   const temp = () => {
     const list = [];
     for (let i = 0; i < 10; i++) {
       list.push(
-        <li>
+        <li key={i}>
           <img src={defaultUser} alt="" />
           <div className="info">
             <div>방이름</div>
@@ -60,7 +64,7 @@ export default function List() {
               <Search />
             </li>
             <li>
-              <AddChat />
+              <AddChat handleAddChat={handleAddChat} />
             </li>
           </ul>
         </header>
