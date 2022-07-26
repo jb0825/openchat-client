@@ -2,18 +2,20 @@ import "assets/style/css/login.css";
 import defaultUser from "assets/img/default_user.jpg";
 import Done from "assets/svg/Done.js";
 import { useEffect } from "react";
-import { useStorage } from "store/useStorage";
 import Modal, { toggle } from "components/Modal";
 import { useNavigate } from "react-router-dom";
+import { storage } from "store/storage";
+import { chat } from "webRTC/chat";
 
 export default function Login() {
-  const { set } = useStorage();
   const navigate = useNavigate();
+  const { setUsername } = chat();
 
   const handleSubmit = () => {
     const input = document.querySelector("#login input");
 
-    set("name", input.value);
+    storage.set("name", input.value);
+    setUsername(input.value);
     input.value = "";
     navigate("/list");
   };

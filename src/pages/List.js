@@ -1,35 +1,55 @@
 import "assets/style/css/list.css";
 import AddChat from "assets/svg/AddChat";
-import Chat from "assets/svg/Chat";
 import More from "assets/svg/More";
 import Notification from "assets/svg/Notification";
 import Person from "assets/svg/Person";
 import Search from "assets/svg/Search";
 import Setting from "assets/svg/Setting";
+import Chat from "assets/svg/Chat";
 import defaultUser from "assets/img/default_user.jpg";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { chat } from "webRTC/chat";
+import { isEmpty } from "util";
 
 export default function List() {
   const navigate = useNavigate();
+  const [list, setList] = useState([
+    <li key="" className="nolist">
+      생성된 채팅방이 없습니다.
+    </li>,
+  ]);
+
+  const { socket, getRooms } = chat();
   const handleAddChat = () => navigate("/create_chatroom");
 
-  const temp = () => {
-    const list = [];
-    for (let i = 0; i < 10; i++) {
-      list.push(
-        <li key={i}>
+  socket.on("rooms", (rooms) => {
+    if (isEmpty(rooms)) return;
+
+    console.log("receive rooms event");
+    console.log(rooms);
+
+    const appendList = [];
+
+    for (let room of Object.keys(rooms))
+      appendList.push(
+        <li key={room}>
           <img src={defaultUser} alt="" />
           <div className="info">
-            <div>방이름</div>
-            <p>설명</p>
+            <div>{room}</div>
+            <p>{rooms[room]}</p>
           </div>
           <div className="time">오후 12:00</div>
         </li>
       );
-    }
 
-    return list;
-  };
+    setList(appendList);
+  });
+
+  useEffect(() => {
+    console.log("emit rooms");
+    getRooms();
+  }, []);
 
   return (
     <div id="list" className="page">
@@ -70,7 +90,7 @@ export default function List() {
         </header>
 
         <article>
-          <ul>{temp()}</ul>
+          <ul id="chatroom-list">{list}</ul>
         </article>
       </section>
     </div>

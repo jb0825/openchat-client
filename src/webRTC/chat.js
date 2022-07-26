@@ -1,35 +1,23 @@
-import io from "socket.io-client";
+import { io } from "socket.io-client";
+import { storage } from "store/storage";
+import defaultUser from "assets/img/default_user.jpg";
 
-const server = "localhost:3001";
-const socket = io(server);
+const socket = io(storage.get("server"));
 
 /** @type {RTCPeerConnection} */
 let connection = null;
 let roomname = null;
 
-const handleIceCandidate = (data) => {
-  console.log("🏁send ice candidate");
-  socket.emit("ice", data.candidate, roomname);
-};
+export const chat = () => {
+  const setUsername = (username) => {
+    socket.emit("username", username);
+  };
 
-socket.on("ice", (ice) => {
-  connection.addIceCandidate(ice);
-});
+  const getRooms = () => socket.emit("rooms");
 
-socket.on("created", (rooms) => {
-  console.log("rooms: ");
-  rooms.forEach(console.log);
-});
+  const createRoom = (roomname, description) => {
+    socket.emit("create-room", roomname, description);
+  };
 
-export const createChatroom = (roomname) => {
-  console.log("Create chatroom name: " + roomname);
-  socket.emit("create_room", roomname);
-};
-
-export const createConnection = (username) => {
-  console.log("create connection");
-  connection = new RTCPeerConnection();
-  connection.addEventListener("icecandidate", handleIceCandidate);
-
-  socket.emit("username", username);
+  return { socket, setUsername, getRooms, createRoom };
 };

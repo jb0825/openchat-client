@@ -103,5 +103,10 @@
   color: #98998f;
   padding: 5px 0;
 }
+#list > section article ul .nolist {
+  display: inline-block;
+  padding: 20px;
+  color: #bbbbbb;
+}
 
 /*# sourceMappingURL=list.css.map */
