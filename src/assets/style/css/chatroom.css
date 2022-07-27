@@ -5,6 +5,7 @@ strong {
 #chatroom {
   background-color: #acc6d9;
   border: 1px solid gray;
+  padding: unset;
 }
 #chatroom .close {
   position: absolute;
@@ -98,6 +99,9 @@ strong {
 #chatroom .main .noti svg {
   vertical-align: middle;
 }
+#chatroom .main .createDate {
+  letter-spacing: normal;
+}
 #chatroom .main .me, #chatroom .main .you {
   margin-bottom: 20px;
 }
@@ -133,26 +137,31 @@ strong {
 }
 #chatroom .main .you {
   position: relative;
+  display: flex;
 }
-#chatroom .main .you > div {
-  text-align: left;
+#chatroom .main .you > img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  margin-right: 15px;
 }
-#chatroom .main .you > div span {
-  vertical-align: bottom;
+#chatroom .main .you > div .user {
+  padding-bottom: 10px;
 }
-#chatroom .main .you > div div {
-  display: inline-block;
+#chatroom .main .you > div .message > div:not(.time) {
   background-color: white;
+  width: fit-content;
   padding: 10px;
   border-radius: 3px;
   margin-right: 7px;
-  margin-left: 10px;
+  margin-bottom: 7px;
   box-shadow: 1px 1px 3px 0px #0000005c;
+  position: relative;
 }
-#chatroom .main .you > div div::after {
+#chatroom .main .you > div .message > div:not(.time):nth-of-type(1)::after {
   content: "";
   position: absolute;
-  left: 0;
+  left: -10px;
   top: 5px;
   width: 0px;
   height: 0px;
@@ -162,6 +171,16 @@ strong {
   border-bottom: 7px solid transparent;
   border-radius: 2px;
 }
+#chatroom .main .you > div .message > div:not(.time):last-of-type {
+  background-color: black;
+}
+#chatroom .main .you > div .message .time {
+  display: inline-block;
+  vertical-align: sub;
+}
+#chatroom .main .you > div .message > div:nth-last-child(2) {
+  display: inline-block;
+}
 #chatroom .send {
   height: 100px;
   bottom: calc((100% - 650px) / 2);
@@ -170,27 +189,27 @@ strong {
   border-top: 1px solid #bbbbbb;
   padding: 15px;
 }
-#chatroom .send .input {
+#chatroom .send form {
   height: 33px;
 }
-#chatroom .send .input input, #chatroom .send .input button {
+#chatroom .send form input, #chatroom .send form button {
   height: 100%;
 }
-#chatroom .send .input input {
+#chatroom .send form input {
   width: 80%;
   padding-right: 15px;
 }
-#chatroom .send .input input:focus {
+#chatroom .send form input:focus {
   outline: none;
 }
-#chatroom .send .input button {
+#chatroom .send form button {
   width: 20%;
   color: #afa420;
   background-color: #ffee1f;
   border: 1px solid #c5b824;
   border-radius: 2px;
 }
-#chatroom .send .input .active {
+#chatroom .send form .active {
   color: #342a2a;
 }
 

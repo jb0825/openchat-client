@@ -8,6 +8,7 @@ strong { font-weight: bold; }
 #chatroom {
     background-color: #acc6d9;
     border: 1px solid gray;
+    padding: unset;
 
     .close {
         position: absolute;
@@ -116,6 +117,7 @@ strong { font-weight: bold; }
 
             svg { vertical-align: middle; }
         }
+        .createDate { letter-spacing: normal; }
 
         .me, .you { margin-bottom: 20px; }
 
@@ -153,35 +155,63 @@ strong { font-weight: bold; }
 
         .you {
             position: relative;
-            
+            display: flex;
+
+            & > img {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                margin-right: 15px;
+            }
+
             & > div {
-                text-align: left;
+                .user { padding-bottom: 10px; }
+                .message {
+                    & > div:not(.time) {
+                        background-color: white;
+                        width: fit-content;
+                        padding: 10px;
+                        border-radius: 3px;
+                        margin-right: 7px;
+                        margin-bottom: 7px;
+                        box-shadow: 1px 1px 3px 0px #0000005c;
+                        position: relative;
 
-                span { vertical-align: bottom; }
-                div {
-                    display: inline-block;
-                    background-color: white;
-                    padding: 10px;
-                    border-radius: 3px;
-                    margin-right: 7px;
-                    margin-left: 10px;
-                    box-shadow: 1px 1px 3px 0px #0000005c;
+                        &:nth-of-type(1)::after {
+                            content: "";
+                            position: absolute;
+                            left: -10px;
+                            top: 5px;
+                            width: 0px;
+                            height: 0px;
+                            border-top: 7px solid white;
+                            border-left: 7px solid transparent;
+                            border-right: 7px solid white;
+                            border-bottom: 7px solid transparent;
+                            border-radius: 2px;
+                        }
 
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        left: 0;
-                        top: 5px;
-                        width: 0px;
-                        height: 0px;
-                        border-top: 7px solid white;
-                        border-left: 7px solid transparent;
-                        border-right: 7px solid white;
-                        border-bottom: 7px solid transparent;
-                        border-radius: 2px;
+                        &:last-of-type {
+                            background-color: black;
+                        }
+                    }
+
+                    .time {
+                        display: inline-block;
+                        vertical-align: sub;
+                    }
+
+                    & > div {
+                        &:nth-last-child(2) {
+                            display: inline-block;
+                        }
                     }
                 }
+ 
+                
             }
+            
+           
         }
     }
 
@@ -193,7 +223,7 @@ strong { font-weight: bold; }
         border-top: 1px solid $gray;
         padding: 15px;
 
-        .input {
+        form {
             height: 33px;
             
             input, button { height: 100%; }

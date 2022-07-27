@@ -10,10 +10,11 @@ import defaultUser from "assets/img/default_user.jpg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { chat } from "webRTC/chat";
-import { isEmpty } from "util";
+import { isEmpty, dateToHoursAndMinutes } from "util";
 
 export default function List() {
   const navigate = useNavigate();
+
   const [list, setList] = useState([
     <li key="" className="nolist">
       생성된 채팅방이 없습니다.
@@ -23,32 +24,43 @@ export default function List() {
   const { socket, getRooms } = chat();
   const handleAddChat = () => navigate("/create_chatroom");
 
-  socket.on("rooms", (rooms) => {
-    if (isEmpty(rooms)) return;
-
-    console.log("receive rooms event");
-    console.log(rooms);
-
-    const appendList = [];
-
-    for (let room of Object.keys(rooms))
-      appendList.push(
-        <li key={room}>
-          <img src={defaultUser} alt="" />
-          <div className="info">
-            <div>{room}</div>
-            <p>{rooms[room]}</p>
-          </div>
-          <div className="time">오후 12:00</div>
-        </li>
-      );
-
-    setList(appendList);
-  });
+  const handleClick = (room, description, createDate) => {
+    navigate("/chatroom_info", { state: { room, description, createDate } });
+  };
 
   useEffect(() => {
     console.log("emit rooms");
     getRooms();
+
+    socket.on("rooms", (rooms) => {
+      if (isEmpty(rooms)) return;
+
+      console.log("receive rooms event");
+      console.log(rooms);
+
+      const appendList = [];
+
+      for (let room of Object.keys(rooms)) {
+        let description = rooms[room].description;
+        let createDate = rooms[room].createDate;
+        console.log(createDate);
+
+        if (description.length === 0) description = "채팅방 설명이 없습니다.";
+
+        appendList.push(
+          <li key={room} onClick={() => handleClick(room, description, createDate)}>
+            <img src={defaultUser} alt="" />
+            <div className="info">
+              <div>{room}</div>
+              <p>{description}</p>
+            </div>
+            <div className="time">{dateToHoursAndMinutes(new Date(createDate))}</div>
+          </li>
+        );
+      }
+
+      setList(appendList);
+    });
   }, []);
 
   return (
