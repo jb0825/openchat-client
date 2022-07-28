@@ -14,7 +14,7 @@ export const chat = () => {
 
   const handleIcecandidate = (data) => {
     console.log("send ice candidate");
-    socket.emit("icecandidate", data.candidate, roomname);
+    socket.emit("ice", data.candidate, roomname);
   };
 
   const handleDataChannel = (event) => {
@@ -23,8 +23,11 @@ export const chat = () => {
   };
 
   const initConnection = (room) => {
+    console.log("init");
+
     connection = new RTCPeerConnection();
     connection.addEventListener("icecandidate", handleIcecandidate);
+    console.log(connection);
     roomname = room;
   };
 

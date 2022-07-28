@@ -53,88 +53,80 @@ export default function Chatroom() {
     document.getElementById("loading").hidden = true;
 
     /* SOCKET */
-    connection = new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: [
-            "stun:stun.l.google.com:19302",
-            "stun:stun1.l.google.com:19302",
-            "stun:stun2.l.google.com:19302",
-            "stun:stun3.l.google.com:19302",
-          ],
-        },
-      ],
-    });
 
+    connection = new RTCPeerConnection();
     connection.addEventListener("icecandidate", (data) => {
       console.log("send ice candidate");
-      socket.emit("icecandidate", data.candidate, state.roomname);
+      socket.emit("ice", data.candidate, state.roomname);
     });
 
-    socket.on("welcome", async (username) => {
-      dataChannel = connection.createDataChannel("dataChannel");
-      dataChannel.addEventListener("message", console.log);
-      console.log(dataChannel);
+    socket.on("welcome", async () => {
+      console.log("create dataChannel");
+      dataChannel = connection.createDataChannel("channel");
       dataChannel.addEventListener("message", console.log);
 
       const offer = await connection.createOffer();
-
       connection.setLocalDescription(offer);
-      console.log("send offer: ", offer, state.roomname);
+      console.log("send offer");
       socket.emit("offer", offer, state.roomname);
     });
 
     socket.on("offer", async (offer) => {
-      console.log("receive offer: " + offer);
+      console.log("receive offer");
       connection.addEventListener("datachannel", (event) => {
-        console.log("datachannel event");
-        console.log(event.channel);
+        console.log("datachannel created");
         dataChannel = event.channel;
+        dataChannel.addEventListener("message", console.log);
       });
 
       connection.setRemoteDescription(offer);
-
       const answer = await connection.createAnswer();
+      connection.setLocalDescription(answer);
+
       console.log("send answer");
       socket.emit("answer", answer, state.roomname);
-
-      console.log("dataChannel: " + dataChannel);
     });
 
     socket.on("answer", (answer) => {
-      connection.setRemoteDescription(answer);
       console.log("receive answer");
+      connection.setRemoteDescription(answer);
+    });
 
-      console.log("dataChannel: " + dataChannel);
-
-      console.log(dataChannel);
+    socket.on("ice", (ice) => {
+      console.log("receive icecandidate");
+      connection.addIceCandidate(ice);
     });
 
     /*
-      initConnection(state.roomname);
-      socket.on("user-count", (count) => setCount(count));
-      socket.on("welcome", async (username, count) => {
-        console.log("setDataChannel");
-        setDataChannel();
+    initConnection(state.roomname);
 
-        const noti = document.createElement("div");
-        const span = document.createElement("span");
-        span.innerText = username + "님이 들어왔습니다.";
-        noti.className = "noti";
-        noti.appendChild(span);
+    socket.on("user-count", (count) => setCount(count));
+    socket.on("welcome", async (username, count) => {
+      console.log("setDataChannel");
+      setDataChannel();
 
-        document.querySelector("#chatroom .main").appendChild(noti);
-        setCount(count);
-      });
-      socket.on("offer", (offer) => {
-        console.log("offer");
-        sendAnswer(offer);
-      });
-      socket.on("answer", (answer) => {
-        console.log("answer");
-        receiveAnswer(answer);
-      });
-      */
+      const noti = document.createElement("div");
+      const span = document.createElement("span");
+      span.innerText = username + "님이 들어왔습니다.";
+      noti.className = "noti";
+      noti.appendChild(span);
+
+      document.querySelector("#chatroom .main").appendChild(noti);
+      setCount(count);
+    });
+    socket.on("offer", (offer) => {
+      console.log("offer");
+      sendAnswer(offer);
+    });
+    socket.on("answer", (answer) => {
+      console.log("answer");
+      receiveAnswer(answer);
+    });
+    socket.on("ice", (ice) => {
+      console.log("receive ice candidate");
+      connection.addIceCandidate(ice);
+    });
+    */
   }, []);
 
   return (
