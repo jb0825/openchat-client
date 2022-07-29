@@ -1,111 +1,116 @@
 import { io } from "socket.io-client";
 import { storage } from "store/storage";
 
-const socket = io(storage.get("server"));
-
+export const socket = io(storage.get("server"));
 /** @type {RTCPeerConnection} */
-let connection = null;
+export let connection = null;
 /** @type {RTCPeerConnection.dataChannel} */
-let dataChannel = null;
+export let dataChannel = null;
+
 let roomname = null;
 
-export const chat = () => {
-  const handleMessage = console.log;
+/* CONNECTION & EVENT LISTENER */
+export const initConnection = (room) => {
+  console.log("init Connection " + room);
+  roomname = room;
+  connection = new RTCPeerConnection();
+  connection.addEventListener("icecandidate", handleIce);
+};
 
-  const handleIcecandidate = (data) => {
-    console.log("send ice candidate");
-    socket.emit("ice", data.candidate, roomname);
-  };
+const handleIce = (data) => {
+  console.log("send ice candidate");
+  socket.emit("ice", data.candidate);
+};
 
-  const handleDataChannel = (event) => {
-    console.log(event.channel);
-    dataChannel = event.channel;
-  };
+const handleDataChannel = (event) => {
+  console.log("datachannel created");
+  dataChannel = event.channel;
+  dataChannel.addEventListener("message", handleMessage);
+};
 
-  const initConnection = (room) => {
-    console.log("init");
+const handleMessage = console.log;
 
-    connection = new RTCPeerConnection();
-    connection.addEventListener("icecandidate", handleIcecandidate);
-    console.log(connection);
-    roomname = room;
-  };
+/* SOCKET.EMIT FUNCTIONS */
+/**
+ * Set username of Socket
+ * @param {string} username
+ */
+export const setUsername = (username) => socket.emit("username", username);
 
-  /**
-   * Create DataChannel and Send offer to Remote Connection
-   */
-  const setDataChannel = async () => {
-    dataChannel = connection.createDataChannel("dataChannel");
-    dataChannel.addEventListener("message", handleMessage);
+/**
+ * Get rooms {roomname: { description, createDate}} from Server
+ * @returns {object}
+ */
+export const getRooms = () => socket.emit("rooms");
 
-    const offer = await connection.createOffer();
-    console.log(offer);
+/**
+ * Create room
+ * @param {string} roomname
+ * @param {string} description
+ * @param {string} createDate
+ */
+export const createRoom = (roomname, description, createDate) =>
+  socket.emit("create-room", roomname, description, createDate);
 
-    connection.setLocalDescription(offer);
-    console.log("send offer");
-    socket.emit("offer", offer, roomname);
+/**
+ * Get user count of chatroom
+ * @param {string} roomname
+ */
+export const getUserCount = (roomname) => socket.emit("user-count", roomname);
 
-    return dataChannel;
-  };
+/**
+ * Join room
+ * @param {string} roomname
+ */
+export const joinRoom = (roomname) => socket.emit("join-room", roomname);
 
-  /**
-   * Set Remote Description (offer) and Send Answer to Local Connection
-   * @param {RTCPeerConnection.offer} answer
-   */
-  const sendAnswer = async (offer) => {
-    connection.addEventListener("datachannel", handleDataChannel);
-    console.log(connection.ondatachannel);
-    connection.setRemoteDescription(offer);
+/* SOCKET.ON FUNCTIONS */
 
-    const answer = await connection.createAnswer();
-    console.log("send answer");
-    socket.emit("answer", answer, roomname);
+/**
+ * Receive event "welcome" from Server
+ */
+export const receiveWelcome = async () => {
+  console.log("create datachannel");
+  dataChannel = connection.createDataChannel("dataChannel");
+  dataChannel.addEventListener("message", handleMessage);
 
-    console.log("dataChannel: " + dataChannel);
-  };
+  console.log("send offer");
+  const offer = await connection.createOffer();
+  connection.setLocalDescription(offer);
 
-  /**
-   * Receive Answer and Set Remote Description (answer) to Local Connection
-   * @param {RTCPeerConnection.answer} answer
-   */
-  const receiveAnswer = (answer) => {
-    connection.setRemoteDescription(answer);
-    console.log("receive answer");
+  socket.emit("offer", offer, roomname);
+};
 
-    console.log("dataChannel: " + dataChannel);
-  };
+/**
+ * Receive event "offer" from Server
+ * @param {RTCPeerConnection.offer} offer
+ */
+export const receiveOffer = async (offer) => {
+  console.log("receive offer");
+  connection.addEventListener("datachannel", handleDataChannel);
+  connection.setRemoteDescription(offer);
 
-  const setUsername = (username) => {
-    socket.emit("username", username);
-  };
+  console.log("send answer");
+  const answer = await connection.createAnswer();
+  connection.setLocalDescription(answer);
 
-  const getRooms = () => socket.emit("rooms");
+  socket.emit("answer", answer, roomname);
+};
 
-  const createRoom = (roomname, description, createDate) => {
-    socket.emit("create-room", roomname, description, createDate);
-  };
+/**
+ * Receive event "answer" from Server
+ * @param {RTCPeerConnection.answer} answer
+ */
+export const receiveAnswer = (answer) => {
+  console.log("receive answer");
+  connection.setRemoteDescription(answer);
+};
 
-  const getUserCount = (roomname) => {
-    console.log("emit user-count");
-    socket.emit("user-count", roomname);
-  };
-
-  const joinRoom = (roomname) => {
-    console.log("emit join-room");
-    socket.emit("join-room", roomname);
-  };
-
-  return {
-    socket,
-    setDataChannel,
-    sendAnswer,
-    receiveAnswer,
-    setUsername,
-    getRooms,
-    createRoom,
-    getUserCount,
-    joinRoom,
-    initConnection,
-    handleDataChannel,
-  };
+/**
+ * Receive event "ice" from Server
+ * @param {RTCPeerConnection.candidate} ice
+ */
+export const receiveIce = (ice) => {
+  console.log("receive ice candidate");
+  connection.addIceCandidate(ice);
 };

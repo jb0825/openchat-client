@@ -9,8 +9,8 @@ import Chat from "assets/svg/Chat";
 import defaultUser from "assets/img/default_user.jpg";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { chat } from "webRTC/chat";
 import { isEmpty, dateToHoursAndMinutes } from "util";
+import { socket, getRooms } from "webRTC/chat";
 
 export default function List() {
   const navigate = useNavigate();
@@ -21,11 +21,10 @@ export default function List() {
     </li>,
   ]);
 
-  const { socket, getRooms } = chat();
   const handleAddChat = () => navigate("/create_chatroom");
 
-  const handleClick = (room, description, createDate) => {
-    navigate("/chatroom_info", { state: { room, description, createDate } });
+  const handleClick = (roomname, description, createDate) => {
+    navigate("/chatroom_info", { state: { roomname, description, createDate } });
   };
 
   useEffect(() => {
@@ -43,7 +42,6 @@ export default function List() {
       for (let room of Object.keys(rooms)) {
         let description = rooms[room].description;
         let createDate = rooms[room].createDate;
-        console.log(createDate);
 
         if (description.length === 0) description = "채팅방 설명이 없습니다.";
 

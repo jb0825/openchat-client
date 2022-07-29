@@ -5,11 +5,10 @@ import { useEffect } from "react";
 import Modal, { toggle } from "components/Modal";
 import { useNavigate } from "react-router-dom";
 import { storage } from "store/storage";
-import { chat } from "webRTC/chat";
+import { setUsername } from "webRTC/chat";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { setUsername } = chat();
 
   const handleSubmit = () => {
     const input = document.querySelector("#login input");

@@ -5,14 +5,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { dateToYears } from "util";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
-import { chat } from "webRTC/chat";
+import { socket, getUserCount, joinRoom } from "webRTC/chat";
 
 export default function ChatroomInfo() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { socket, getUserCount, joinRoom } = chat();
 
-  const [room, setRoom] = useState();
+  const [roomname, setRoomname] = useState();
   const [description, setDescription] = useState();
   const [createDate, setCreateDate] = useState();
   const [count, setCount] = useState(0);
@@ -20,8 +19,8 @@ export default function ChatroomInfo() {
 
   const handleClose = () => navigate("/list");
   const handleButtonClick = () => {
-    joinRoom(room);
-    navigate("/chatroom", { state: { roomname: room, createDate } });
+    joinRoom(roomname);
+    navigate("/chatroom", { state: { roomname, createDate } });
   };
 
   useEffect(() => {
@@ -32,8 +31,9 @@ export default function ChatroomInfo() {
       return;
     }
 
-    getUserCount(state.room);
-    setRoom(state.room);
+    getUserCount(state.roomname);
+
+    setRoomname(state.roomname);
     setDescription(state.description);
     setCreateDate(state.createDate);
 
@@ -49,7 +49,7 @@ export default function ChatroomInfo() {
       <img src={logo} alt="" />
       <div className="info">
         <h3>그룹채팅</h3>
-        <h2>{room}</h2>
+        <h2>{roomname}</h2>
         <p>{description}</p>
         <p className="create_date">
           {count} 명 | 개설일 {dateToYears(new Date(createDate))}

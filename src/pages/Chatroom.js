@@ -5,23 +5,27 @@ import NotificationSmall from "assets/svg/NotificationSmall";
 import ListSmall from "assets/svg/ListSmall";
 import Close from "assets/svg/Close";
 import CalendarSmall from "assets/svg/CalendarSmall";
+import Loading from "components/Loading";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { chat } from "webRTC/chat";
-import Loading from "components/Loading";
 import { dateToYears_Ko } from "util";
+import {
+  getUserCount,
+  initConnection,
+  receiveAnswer,
+  receiveIce,
+  receiveOffer,
+  receiveWelcome,
+  socket,
+} from "webRTC/chat";
 
 export default function Chatroom() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { socket, initConnection, setDataChannel, sendAnswer, receiveAnswer, getUserCount } = chat();
 
   const [roomname, setRoomname] = useState();
   const [createDate, setCreateDate] = useState();
   const [count, setCount] = useState(0);
-
-  let connection = null;
-  let dataChannel = null;
 
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
@@ -53,80 +57,21 @@ export default function Chatroom() {
     document.getElementById("loading").hidden = true;
 
     /* SOCKET */
-
-    connection = new RTCPeerConnection();
-    connection.addEventListener("icecandidate", (data) => {
-      console.log("send ice candidate");
-      socket.emit("ice", data.candidate, state.roomname);
-    });
-
-    socket.on("welcome", async () => {
-      console.log("create dataChannel");
-      dataChannel = connection.createDataChannel("channel");
-      dataChannel.addEventListener("message", console.log);
-
-      const offer = await connection.createOffer();
-      connection.setLocalDescription(offer);
-      console.log("send offer");
-      socket.emit("offer", offer, state.roomname);
-    });
-
-    socket.on("offer", async (offer) => {
-      console.log("receive offer");
-      connection.addEventListener("datachannel", (event) => {
-        console.log("datachannel created");
-        dataChannel = event.channel;
-        dataChannel.addEventListener("message", console.log);
-      });
-
-      connection.setRemoteDescription(offer);
-      const answer = await connection.createAnswer();
-      connection.setLocalDescription(answer);
-
-      console.log("send answer");
-      socket.emit("answer", answer, state.roomname);
-    });
-
-    socket.on("answer", (answer) => {
-      console.log("receive answer");
-      connection.setRemoteDescription(answer);
-    });
-
-    socket.on("ice", (ice) => {
-      console.log("receive icecandidate");
-      connection.addIceCandidate(ice);
-    });
-
-    /*
     initConnection(state.roomname);
 
-    socket.on("user-count", (count) => setCount(count));
-    socket.on("welcome", async (username, count) => {
-      console.log("setDataChannel");
-      setDataChannel();
+    socket.on("welcome", receiveWelcome);
+    socket.on("offer", receiveOffer);
+    socket.on("answer", receiveAnswer);
+    socket.on("ice", receiveIce);
+    socket.on("user-count", setCount);
 
-      const noti = document.createElement("div");
-      const span = document.createElement("span");
-      span.innerText = username + "님이 들어왔습니다.";
-      noti.className = "noti";
-      noti.appendChild(span);
-
-      document.querySelector("#chatroom .main").appendChild(noti);
-      setCount(count);
-    });
-    socket.on("offer", (offer) => {
-      console.log("offer");
-      sendAnswer(offer);
-    });
-    socket.on("answer", (answer) => {
-      console.log("answer");
-      receiveAnswer(answer);
-    });
-    socket.on("ice", (ice) => {
-      console.log("receive ice candidate");
-      connection.addIceCandidate(ice);
-    });
-    */
+    return () => {
+      socket.off("welcome");
+      socket.off("offer");
+      socket.off("answer");
+      socket.off("ice");
+      socket.off("user-count");
+    };
   }, []);
 
   return (

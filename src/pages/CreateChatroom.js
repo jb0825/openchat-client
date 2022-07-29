@@ -1,12 +1,10 @@
 import "assets/style/css/createChatroom.css";
 import Modal, { toggle } from "components/Modal";
 import { useNavigate } from "react-router-dom";
-import { dateToYears } from "util";
-import { chat } from "webRTC/chat";
+import { createRoom } from "webRTC/chat";
 
 export default function CreateChatroom() {
   const navigate = useNavigate();
-  const { createRoom } = chat();
 
   const handleInput = (event) => {
     const length = event.target.value.length;
