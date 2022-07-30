@@ -8,18 +8,22 @@ export let connection = null;
 export let dataChannel = null;
 
 let roomname = null;
+let handleMessage = null;
+
+export const send = (message) => dataChannel.send(message);
 
 /* CONNECTION & EVENT LISTENER */
-export const initConnection = (room) => {
+export const initConnection = (room, handleMsg) => {
   console.log("init Connection " + room);
   roomname = room;
   connection = new RTCPeerConnection();
   connection.addEventListener("icecandidate", handleIce);
+  handleMessage = handleMsg;
 };
 
 const handleIce = (data) => {
   console.log("send ice candidate");
-  socket.emit("ice", data.candidate);
+  socket.emit("ice", data.candidate, roomname);
 };
 
 const handleDataChannel = (event) => {
@@ -27,8 +31,6 @@ const handleDataChannel = (event) => {
   dataChannel = event.channel;
   dataChannel.addEventListener("message", handleMessage);
 };
-
-const handleMessage = console.log;
 
 /* SOCKET.EMIT FUNCTIONS */
 /**
@@ -70,6 +72,8 @@ export const joinRoom = (roomname) => socket.emit("join-room", roomname);
  * Receive event "welcome" from Server
  */
 export const receiveWelcome = async () => {
+  getUserCount(roomname);
+
   console.log("create datachannel");
   dataChannel = connection.createDataChannel("dataChannel");
   dataChannel.addEventListener("message", handleMessage);

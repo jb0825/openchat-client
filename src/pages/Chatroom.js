@@ -10,14 +10,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { dateToYears_Ko } from "util";
 import {
-  getUserCount,
   initConnection,
   receiveAnswer,
   receiveIce,
   receiveOffer,
   receiveWelcome,
   socket,
+  send,
+  getUserCount,
 } from "webRTC/chat";
+import { dateToHoursAndMinutes } from "util";
 
 export default function Chatroom() {
   const navigate = useNavigate();
@@ -25,7 +27,18 @@ export default function Chatroom() {
 
   const [roomname, setRoomname] = useState();
   const [createDate, setCreateDate] = useState();
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
+  const [messageList, setMessageList] = useState([
+    <div className="noti createDate" key="0">
+      <CalendarSmall /> <span>{dateToYears_Ko(new Date(createDate))}</span>
+    </div>,
+    <div className="noti" key="1">
+      <span>
+        ㅇㅇ님이 들어왔습니다. <br />
+        운영정책을 위반한 메시지로 신고 접수 시 카카오톡 이용에 제한이 있을 수 있습니다.
+      </span>
+    </div>,
+  ]);
 
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
@@ -41,6 +54,37 @@ export default function Chatroom() {
 
     const message = document.querySelector("#chatroom form input");
     if (message.value.length === 0) return;
+
+    send(message.value);
+    setMessageList([
+      ...messageList,
+      <div className="me" key={messageList.length}>
+        <div>
+          <span>{dateToHoursAndMinutes(new Date())}</span>
+          <div>{message.value}</div>
+        </div>
+      </div>,
+    ]);
+    message.value = "";
+  };
+
+  const handleMessage = (event) => {
+    console.log(event.data);
+
+    console.log(messageList);
+    setMessageList([
+      ...messageList,
+      <div className="you" key={messageList.length}>
+        <img src={defaultUser} alt="" />
+        <div>
+          <div className="user">username</div>
+          <div className="message">
+            <div>{event.data}</div>
+            <div className="time">{dateToHoursAndMinutes(new Date())}</div>
+          </div>
+        </div>
+      </div>,
+    ]);
   };
 
   useEffect(() => {
@@ -53,13 +97,16 @@ export default function Chatroom() {
 
     setRoomname(state.roomname);
     setCreateDate(state.createDate);
-    getUserCount(roomname);
     document.getElementById("loading").hidden = true;
 
     /* SOCKET */
-    initConnection(state.roomname);
+    initConnection(state.roomname, handleMessage);
+    getUserCount(state.roomname);
 
-    socket.on("welcome", receiveWelcome);
+    socket.on("welcome", () => {
+      setCount(count + 1);
+      receiveWelcome();
+    });
     socket.on("offer", receiveOffer);
     socket.on("answer", receiveAnswer);
     socket.on("ice", receiveIce);
@@ -73,6 +120,43 @@ export default function Chatroom() {
       socket.off("user-count");
     };
   }, []);
+
+  const ex = (
+    <>
+      <div className="me">
+        <div>
+          <span>오후 11:52</span>
+          <div>채팅채팅ㅌ챙내럄ㄴㅇ래fasdfㅁㄹ</div>
+        </div>
+      </div>
+
+      <div className="you">
+        <img src={defaultUser} alt="" />
+        <div>
+          <div className="user">username</div>
+          <div className="message">
+            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
+            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
+            <div>messafasdffasdf</div>
+            <div className="time">오후 12:24</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="you">
+        <img src={defaultUser} alt="" />
+        <div>
+          <div className="user">username</div>
+          <div className="message">
+            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
+            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
+            <div>messafasdffasdf</div>
+            <div className="time">오후 12:24</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <div id="chatroom" className="page">
@@ -96,50 +180,7 @@ export default function Chatroom() {
         </div>
       </section>
 
-      <section className="main">
-        <div className="noti createDate">
-          <CalendarSmall /> <span>{dateToYears_Ko(new Date(createDate))}</span>
-        </div>
-        <div className="noti">
-          <span>
-            ㅇㅇ님이 들어왔습니다. <br />
-            운영정책을 위반한 메시지로 신고 접수 시 카카오톡 이용에 제한이 있을 수 있습니다.
-          </span>
-        </div>
-
-        <div className="me">
-          <div>
-            <span>오후 11:52</span>
-            <div>채팅채팅ㅌ챙내럄ㄴㅇ래fasdfㅁㄹ</div>
-          </div>
-        </div>
-
-        <div className="you">
-          <img src={defaultUser} alt="" />
-          <div>
-            <div className="user">username</div>
-            <div className="message">
-              <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-              <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-              <div>messafasdffasdf</div>
-              <div className="time">오후 12:24</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="you">
-          <img src={defaultUser} alt="" />
-          <div>
-            <div className="user">username</div>
-            <div className="message">
-              <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-              <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-              <div>messafasdffasdf</div>
-              <div className="time">오후 12:24</div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="main">{messageList}</section>
 
       <section className="send">
         <form onSubmit={handleSubmit}>
