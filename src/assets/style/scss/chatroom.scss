@@ -122,12 +122,15 @@ strong { font-weight: bold; }
         .me, .you { margin-bottom: 20px; }
 
         .me {
-           position: relative;
-
-            & > div { 
+            position: relative;
+        
+            &>div {
                 text-align: right;
-                
-                span { vertical-align: bottom; }
+        
+                span {
+                    vertical-align: bottom;
+                }
+        
                 div {
                     display: inline-block;
                     background-color: $yellow;
@@ -135,7 +138,7 @@ strong { font-weight: bold; }
                     border-radius: 3px;
                     margin-left: 7px;
                     box-shadow: 1px 1px 3px 0px #0000005c;
-
+        
                     &::after {
                         content: "";
                         position: absolute;
@@ -149,25 +152,28 @@ strong { font-weight: bold; }
                         border-bottom: 7px solid transparent;
                         border-radius: 2px;
                     }
-                }                    
+                }
             }
         }
-
+        
         .you {
             position: relative;
             display: flex;
-
-            & > img {
+        
+            &>img {
                 width: 40px;
                 height: 40px;
                 border-radius: 10px;
                 margin-right: 15px;
             }
-
-            & > div {
-                .user { padding-bottom: 10px; }
+        
+            &>div {
+                .user {
+                    padding-bottom: 10px;
+                }
+        
                 .message {
-                    & > div:not(.time) {
+                    &>div:not(.time) {
                         background-color: white;
                         width: fit-content;
                         padding: 10px;
@@ -176,7 +182,7 @@ strong { font-weight: bold; }
                         margin-bottom: 7px;
                         box-shadow: 1px 1px 3px 0px #0000005c;
                         position: relative;
-
+        
                         &:nth-of-type(1)::after {
                             content: "";
                             position: absolute;
@@ -190,28 +196,28 @@ strong { font-weight: bold; }
                             border-bottom: 7px solid transparent;
                             border-radius: 2px;
                         }
-
+        
                         &:last-of-type {
                             background-color: black;
                         }
                     }
-
+        
                     .time {
                         display: inline-block;
                         vertical-align: sub;
                     }
-
-                    & > div {
+        
+                    &>div {
                         &:nth-last-child(2) {
                             display: inline-block;
                         }
                     }
                 }
- 
-                
+        
+        
             }
-            
-           
+        
+        
         }
     }
 

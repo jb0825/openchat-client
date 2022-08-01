@@ -1,5 +1,7 @@
 import { io } from "socket.io-client";
 import { storage } from "store/storage";
+import defaultUser from "assets/img/default_user.jpg";
+import { dateToHoursAndMinutes } from "util";
 
 export const socket = io(storage.get("server"));
 /** @type {RTCPeerConnection} */
@@ -8,17 +10,80 @@ export let connection = null;
 export let dataChannel = null;
 
 let roomname = null;
-let handleMessage = null;
 
-export const send = (message) => dataChannel.send(message);
+/**
+ * dataChannel message send
+ * data = { name, message }
+ * @param {string} name
+ * @param {string} message
+ */
+export const messageSend = (name, message) => {
+  const data = {
+    name: !name ? "anonymous" : name,
+    message,
+  };
+
+  console.log(storage.messageList);
+
+  storage.messageList.push(
+    <div className="me" key={storage.messageList.length}>
+      <div>
+        <span>{dateToHoursAndMinutes(new Date())}</span>
+        <div>{message}</div>
+      </div>
+    </div>
+  );
+
+  dataChannel.send(JSON.stringify(data));
+};
+
+/**
+ * dataChannel message receive event listener
+ * @param {dataChannel.event} event
+ */
+const handleMessage = (event) => {
+  const { name, message } = JSON.parse(event.data);
+
+  storage.messageList.push(
+    <div className="you" key={storage.messageList.length}>
+      <img src={defaultUser} alt="" />
+      <div>
+        <div className="user">{name}</div>
+        <div className="message">
+          <div>{message}</div>
+          <div className="time">{dateToHoursAndMinutes(new Date())}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+/*
+const handleMessage = (event) => {
+  const section = document.querySelector("#chatroom .main");
+  const you = document.createElement("div");
+  const img = document.createElement("img");
+  const message = document.createElement("div");
+  const time = document.createElement("span");
+
+  img.src = defaultUser;
+  message.innerText = event.data;
+  message.className = "message";
+  time.innerText = dateToHoursAndMinutes(new Date());
+  time.className = "time";
+  you.className = "you";
+  you.appendChild(img);
+  you.appendChild(message);
+  you.appendChild(time);
+  section.appendChild(you);
+};
+*/
 
 /* CONNECTION & EVENT LISTENER */
-export const initConnection = (room, handleMsg) => {
+export const initConnection = (room) => {
   console.log("init Connection " + room);
   roomname = room;
   connection = new RTCPeerConnection();
   connection.addEventListener("icecandidate", handleIce);
-  handleMessage = handleMsg;
 };
 
 const handleIce = (data) => {

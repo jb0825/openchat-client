@@ -6,6 +6,7 @@ import ListSmall from "assets/svg/ListSmall";
 import Close from "assets/svg/Close";
 import CalendarSmall from "assets/svg/CalendarSmall";
 import Loading from "components/Loading";
+import { storage } from "store/storage";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { dateToYears_Ko } from "util";
@@ -16,29 +17,19 @@ import {
   receiveOffer,
   receiveWelcome,
   socket,
-  send,
+  messageSend,
   getUserCount,
 } from "webRTC/chat";
-import { dateToHoursAndMinutes } from "util";
 
 export default function Chatroom() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
   const [roomname, setRoomname] = useState();
-  const [createDate, setCreateDate] = useState();
   const [count, setCount] = useState(1);
-  const [messageList, setMessageList] = useState([
-    <div className="noti createDate" key="0">
-      <CalendarSmall /> <span>{dateToYears_Ko(new Date(createDate))}</span>
-    </div>,
-    <div className="noti" key="1">
-      <span>
-        ㅇㅇ님이 들어왔습니다. <br />
-        운영정책을 위반한 메시지로 신고 접수 시 카카오톡 이용에 제한이 있을 수 있습니다.
-      </span>
-    </div>,
-  ]);
+  const [messageList, setMessageList] = useState([]);
+
+  const name = storage.get("name");
 
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
@@ -46,45 +37,15 @@ export default function Chatroom() {
     if (event.target.value.length > 0) btn.classList.add("active");
     else btn.classList.remove("active");
   };
-
   const handleClose = () => navigate("/list");
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const message = document.querySelector("#chatroom form input");
     if (message.value.length === 0) return;
 
-    send(message.value);
-    setMessageList([
-      ...messageList,
-      <div className="me" key={messageList.length}>
-        <div>
-          <span>{dateToHoursAndMinutes(new Date())}</span>
-          <div>{message.value}</div>
-        </div>
-      </div>,
-    ]);
+    messageSend(name, message.value);
     message.value = "";
-  };
-
-  const handleMessage = (event) => {
-    console.log(event.data);
-
-    console.log(messageList);
-    setMessageList([
-      ...messageList,
-      <div className="you" key={messageList.length}>
-        <img src={defaultUser} alt="" />
-        <div>
-          <div className="user">username</div>
-          <div className="message">
-            <div>{event.data}</div>
-            <div className="time">{dateToHoursAndMinutes(new Date())}</div>
-          </div>
-        </div>
-      </div>,
-    ]);
   };
 
   useEffect(() => {
@@ -96,11 +57,32 @@ export default function Chatroom() {
     }
 
     setRoomname(state.roomname);
-    setCreateDate(state.createDate);
     document.getElementById("loading").hidden = true;
 
+    // storage 에 있는 messageList 에 push 발생시 setMessageList 실행
+    // chat.js 에서 messageList 값 변경하려고 storage 사용함
+    Object.defineProperty(storage.messageList, "push", {
+      value: (args) => {
+        const result = Array.prototype["push"].apply(storage.messageList, [args]);
+        setMessageList([...storage.messageList]);
+        return result;
+      },
+    });
+
+    storage.messageList.push([
+      <div className="noti createDate" key="0">
+        <CalendarSmall /> <span>{dateToYears_Ko(new Date(state.createDate))}</span>
+      </div>,
+      <div className="noti" key="1">
+        <span>
+          {name} 님이 들어왔습니다. <br />
+          운영정책을 위반한 메시지로 신고 접수 시 카카오톡 이용에 제한이 있을 수 있습니다.
+        </span>
+      </div>,
+    ]);
+
     /* SOCKET */
-    initConnection(state.roomname, handleMessage);
+    initConnection(state.roomname);
     getUserCount(state.roomname);
 
     socket.on("welcome", () => {
@@ -113,6 +95,9 @@ export default function Chatroom() {
     socket.on("user-count", setCount);
 
     return () => {
+      // 이거 안먹히는 이유 찾기
+      //delete storage.messageList.push;
+
       socket.off("welcome");
       socket.off("offer");
       socket.off("answer");
@@ -120,43 +105,6 @@ export default function Chatroom() {
       socket.off("user-count");
     };
   }, []);
-
-  const ex = (
-    <>
-      <div className="me">
-        <div>
-          <span>오후 11:52</span>
-          <div>채팅채팅ㅌ챙내럄ㄴㅇ래fasdfㅁㄹ</div>
-        </div>
-      </div>
-
-      <div className="you">
-        <img src={defaultUser} alt="" />
-        <div>
-          <div className="user">username</div>
-          <div className="message">
-            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-            <div>messafasdffasdf</div>
-            <div className="time">오후 12:24</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="you">
-        <img src={defaultUser} alt="" />
-        <div>
-          <div className="user">username</div>
-          <div className="message">
-            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-            <div>messagesadfsfasdfsdfsdafssdfsdafasdffasdfasdffasdf</div>
-            <div>messafasdffasdf</div>
-            <div className="time">오후 12:24</div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
 
   return (
     <div id="chatroom" className="page">
