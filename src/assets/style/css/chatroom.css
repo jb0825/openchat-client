@@ -95,6 +95,7 @@ strong {
   margin: auto;
   margin-bottom: 13px;
   text-align: center;
+  line-height: 15px;
 }
 #chatroom .main .noti svg {
   vertical-align: middle;

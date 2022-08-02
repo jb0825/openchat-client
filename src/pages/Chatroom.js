@@ -4,12 +4,10 @@ import SearchSmall from "assets/svg/SearchSmall";
 import NotificationSmall from "assets/svg/NotificationSmall";
 import ListSmall from "assets/svg/ListSmall";
 import Close from "assets/svg/Close";
-import CalendarSmall from "assets/svg/CalendarSmall";
 import Loading from "components/Loading";
 import { storage } from "store/storage";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { dateToYears_Ko } from "util";
 import {
   initConnection,
   receiveAnswer,
@@ -20,6 +18,11 @@ import {
   messageSend,
   getUserCount,
 } from "webRTC/chat";
+import CalendarSmall from "assets/svg/CalendarSmall";
+import { dateToYears_Ko } from "util";
+
+// chat.js 에서 dataChannel message send / receive 에 사용할 변수
+export const chatMsgList = [];
 
 export default function Chatroom() {
   const navigate = useNavigate();
@@ -59,17 +62,16 @@ export default function Chatroom() {
     setRoomname(state.roomname);
     document.getElementById("loading").hidden = true;
 
-    // storage 에 있는 messageList 에 push 발생시 setMessageList 실행
-    // chat.js 에서 messageList 값 변경하려고 storage 사용함
-    Object.defineProperty(storage.messageList, "push", {
+    // chatMsgList 에 push 발생시 setMessageList 실행
+    // chat.js 에서 messageList 값 변경하려고 chatMsgList 사용함
+    Object.defineProperty(chatMsgList, "push", {
       value: (args) => {
-        const result = Array.prototype["push"].apply(storage.messageList, [args]);
-        setMessageList([...storage.messageList]);
+        const result = Array.prototype["push"].apply(chatMsgList, [args]);
+        setMessageList([...chatMsgList]);
         return result;
       },
     });
-
-    storage.messageList.push([
+    chatMsgList.push([
       <div className="noti createDate" key="0">
         <CalendarSmall /> <span>{dateToYears_Ko(new Date(state.createDate))}</span>
       </div>,
@@ -85,9 +87,9 @@ export default function Chatroom() {
     initConnection(state.roomname);
     getUserCount(state.roomname);
 
-    socket.on("welcome", () => {
+    socket.on("welcome", (name) => {
       setCount(count + 1);
-      receiveWelcome();
+      receiveWelcome(name);
     });
     socket.on("offer", receiveOffer);
     socket.on("answer", receiveAnswer);

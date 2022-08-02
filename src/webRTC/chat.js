@@ -1,5 +1,6 @@
 import { io } from "socket.io-client";
 import { storage } from "store/storage";
+import { chatMsgList } from "pages/Chatroom";
 import defaultUser from "assets/img/default_user.jpg";
 import { dateToHoursAndMinutes } from "util";
 
@@ -23,17 +24,14 @@ export const messageSend = (name, message) => {
     message,
   };
 
-  console.log(storage.messageList);
-
-  storage.messageList.push(
-    <div className="me" key={storage.messageList.length}>
+  chatMsgList.push(
+    <div className="me" key={chatMsgList.length}>
       <div>
         <span>{dateToHoursAndMinutes(new Date())}</span>
         <div>{message}</div>
       </div>
     </div>
   );
-
   dataChannel.send(JSON.stringify(data));
 };
 
@@ -44,8 +42,8 @@ export const messageSend = (name, message) => {
 const handleMessage = (event) => {
   const { name, message } = JSON.parse(event.data);
 
-  storage.messageList.push(
-    <div className="you" key={storage.messageList.length}>
+  chatMsgList.push(
+    <div className="you" key={chatMsgList.length}>
       <img src={defaultUser} alt="" />
       <div>
         <div className="user">{name}</div>
@@ -57,6 +55,8 @@ const handleMessage = (event) => {
     </div>
   );
 };
+
+// old code
 /*
 const handleMessage = (event) => {
   const section = document.querySelector("#chatroom .main");
@@ -136,8 +136,14 @@ export const joinRoom = (roomname) => socket.emit("join-room", roomname);
 /**
  * Receive event "welcome" from Server
  */
-export const receiveWelcome = async () => {
+export const receiveWelcome = async (name) => {
   getUserCount(roomname);
+
+  chatMsgList.push(
+    <div className="noti" key="1">
+      <span>{name} 님이 들어왔습니다.</span>
+    </div>
+  );
 
   console.log("create datachannel");
   dataChannel = connection.createDataChannel("dataChannel");
