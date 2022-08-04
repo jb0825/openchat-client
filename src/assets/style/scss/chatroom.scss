@@ -86,24 +86,16 @@ strong { font-weight: bold; }
         overflow-y: scroll;
         letter-spacing: -0.5px;
 
+        /* Firefox Scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: #0000002e $lightblue;
+        
+        /* Chrome Scrollbar */
+        &::-webkit-scrollbar { width: 10px; }
+        &::-webkit-scrollbar-track { background-color: $lightblue; }
+        &::-webkit-scrollbar-thumb { background-color: #0000002e; }
 
-        scrollbar-color: $lightblue;
-        
-        h1 {
-            font-size: 15px;
-        }
-        
-        &::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        &::-webkit-scrollbar-track {
-            background-color: $lightblue;
-        }
-        
-        &::-webkit-scrollbar-thumb {
-            background-color: #0000002e;
-        }
+        h1 { font-size: 15px; }
 
         .noti {
             background-color: #00000014;
@@ -130,6 +122,7 @@ strong { font-weight: bold; }
         
                 span {
                     vertical-align: bottom;
+                    display: inline-block;
                 }
         
                 div {
@@ -139,12 +132,14 @@ strong { font-weight: bold; }
                     border-radius: 3px;
                     margin-left: 7px;
                     box-shadow: 1px 1px 3px 0px #0000005c;
+                    word-break: break-all;
+                    text-align: left;
         
                     &::after {
                         content: "";
                         position: absolute;
                         right: -10px;
-                        top: 5px;
+                        top: 20px;
                         width: 0px;
                         height: 0px;
                         border-top: 7px solid $yellow;
@@ -169,9 +164,7 @@ strong { font-weight: bold; }
             }
         
             &>div {
-                .user {
-                    padding-bottom: 10px;
-                }
+                .user { padding-bottom: 5px; }
         
                 .message {
                     &>div:not(.time) {
@@ -183,6 +176,7 @@ strong { font-weight: bold; }
                         margin-bottom: 7px;
                         box-shadow: 1px 1px 3px 0px #0000005c;
                         position: relative;
+                        word-break: break-all;
         
                         &:nth-of-type(1)::after {
                             content: "";

@@ -21,7 +21,7 @@
   outline: none;
   border-bottom: 1px solid black;
 }
-#create_chatroom label {
+#create_chatroom input[type=text] + label {
   border-bottom: 1px solid #e3e3e3;
   color: #585853;
   position: absolute;
@@ -31,6 +31,46 @@
   bottom: 0;
   text-align: right;
   line-height: 23px;
+}
+#create_chatroom .radio {
+  margin: 25px 0;
+}
+#create_chatroom .radio input[type=radio] {
+  appearance: none;
+}
+#create_chatroom .radio input[type=radio]:checked + label::before {
+  border: 3px solid #ffdd00;
+}
+#create_chatroom .radio input[type=radio]:checked + label::after {
+  display: unset;
+}
+#create_chatroom .radio label {
+  position: relative;
+  display: inline-block;
+  width: 120px;
+}
+#create_chatroom .radio label::before {
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #bbbbbb;
+  border-radius: 15px;
+  margin-right: 10px;
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+#create_chatroom .radio label::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: #ffdd00;
+  display: block;
+  position: absolute;
+  top: calc(50% - 6px);
+  left: 6.5px;
+  border-radius: 10px;
+  display: none;
 }
 #create_chatroom .btns {
   position: fixed;

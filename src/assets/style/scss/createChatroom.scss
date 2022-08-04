@@ -26,19 +26,65 @@ $gray1: #e3e3e3;
             outline: none;
             border-bottom: 1px solid black;
         }
+
+        & + label {
+            border-bottom: 1px solid $gray1;
+            color: $middlegray;
+            position: absolute;
+            width: 40px;
+            height: 30px;
+            right: 0;
+            bottom: 0;
+            text-align: right;
+            line-height: 23px;
+        }
     }
 
-    label {
-        border-bottom: 1px solid $gray1;
-        color: $middlegray;
-        position: absolute;
-        width: 40px;
-        height: 30px;
-        right: 0;
-        bottom: 0;
-        text-align: right;
-        line-height: 23px;
+    .radio {
+        margin: 25px 0;
+
+        input[type="radio"] {
+            appearance: none;
+
+            &:checked {
+                & + label::before { border: 3px solid $yellow2; }
+                & + label::after { display: unset; }
+            }
+        }
+
+        label {
+            position: relative;
+            display: inline-block;
+            width: 120px;
+
+            &::before {
+                content: "";
+                display: inline-block;
+                width: 25px;
+                height: 25px;
+                border: 1px solid $gray;
+                border-radius: 15px;
+                margin-right: 10px;
+                vertical-align: middle;
+                box-sizing: border-box;
+            }
+
+            &::after {
+                content: "";
+                width: 12px;
+                height: 12px;
+                background-color: $yellow2;
+                display: block;
+                position: absolute;
+                top: calc(50% - 6px);
+                left: 6.5px;
+                border-radius: 10px;
+                display: none;
+            }
+        }
+        
     }
+
 
     .btns {
         position: fixed;

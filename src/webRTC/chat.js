@@ -81,9 +81,18 @@ const handleMessage = (event) => {
 /* CONNECTION & EVENT LISTENER */
 export const initConnection = (room) => {
   console.log("init Connection " + room);
+
   roomname = room;
   connection = new RTCPeerConnection();
   connection.addEventListener("icecandidate", handleIce);
+};
+
+export const terminate = () => {
+  console.log("Connection Close...");
+
+  if (!dataChannel) dataChannel.close();
+  if (!connection) connection.close();
+  chatMsgList.length = 0;
 };
 
 const handleIce = (data) => {
@@ -116,8 +125,8 @@ export const getRooms = () => socket.emit("rooms");
  * @param {string} description
  * @param {string} createDate
  */
-export const createRoom = (roomname, description, createDate) =>
-  socket.emit("create-room", roomname, description, createDate);
+export const createRoom = (roomname, description, createDate, group) =>
+  socket.emit("create-room", roomname, description, createDate, group);
 
 /**
  * Get user count of chatroom

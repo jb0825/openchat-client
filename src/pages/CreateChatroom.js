@@ -21,12 +21,13 @@ export default function CreateChatroom() {
   };
 
   const handleCreate = () => {
+    const group = document.querySelector("input[name='group']:checked");
     const roomname = document.getElementById("chatroom_name");
     const description = document.getElementById("description");
     const createDate = new Date();
     const state = { roomname: roomname.value, createDate };
 
-    createRoom(roomname.value, description.value, createDate);
+    createRoom(roomname.value, description.value, createDate, group.value);
 
     roomname.value = "";
     description.value = "";
@@ -34,14 +35,32 @@ export default function CreateChatroom() {
     navigate("/chatroom", { state });
   };
 
+  const section = (
+    <section>
+      <h2>참여 설정</h2>
+      <h3>채팅방 입장 조건</h3>
+    </section>
+  );
+
   return (
     <div id="create_chatroom" className="page">
       <Modal content="채팅방 만들거임?>" action={handleCreate} />
 
       <section>
         <h2>오픈채팅방 만들기</h2>
-        <h3>그룹 채팅방</h3>
         <form>
+          <div className="radio">
+            <input id="private" type="radio" name="group" value="false" defaultChecked />
+            <label htmlFor="private">
+              <span>1대1 채팅방</span>
+            </label>
+
+            <input id="group" type="radio" name="group" value="true" />
+            <label htmlFor="group">
+              <span>그룹 채팅방</span>
+            </label>
+          </div>
+
           <div>
             <input
               id="chatroom_name"
@@ -69,11 +88,6 @@ export default function CreateChatroom() {
             </label>
           </div>
         </form>
-      </section>
-
-      <section>
-        <h2>참여 설정</h2>
-        <h3>채팅방 입장 조건</h3>
       </section>
 
       <section className="btns">

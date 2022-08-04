@@ -15,11 +15,13 @@ import {
   receiveOffer,
   receiveWelcome,
   socket,
+  dataChannel,
   messageSend,
   getUserCount,
 } from "webRTC/chat";
 import CalendarSmall from "assets/svg/CalendarSmall";
 import { dateToYears_Ko } from "util";
+import Modal, { toggle } from "components/Modal";
 
 // chat.js 에서 dataChannel message send / receive 에 사용할 변수
 export const chatMsgList = [];
@@ -37,12 +39,17 @@ export default function Chatroom() {
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
 
-    if (event.target.value.length > 0) btn.classList.add("active");
+    if (event.target.value.length > 0 && dataChannel !== null) btn.classList.add("active");
     else btn.classList.remove("active");
   };
   const handleClose = () => navigate("/list");
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (!dataChannel || dataChannel.readyState !== "open") {
+      toggle();
+      return;
+    }
 
     const message = document.querySelector("#chatroom form input");
     if (message.value.length === 0) return;
@@ -50,6 +57,11 @@ export default function Chatroom() {
     messageSend(name, message.value);
     message.value = "";
   };
+
+  useEffect(() => {
+    const body = document.querySelector(".main");
+    body.scrollTo(0, body.scrollHeight);
+  }, [messageList]);
 
   useEffect(() => {
     // navigate 파라미터 없을때 redirect
@@ -98,7 +110,7 @@ export default function Chatroom() {
 
     return () => {
       // 이거 안먹히는 이유 찾기
-      //delete storage.messageList.push;
+      //delete messageList.push;
 
       socket.off("welcome");
       socket.off("offer");
@@ -111,6 +123,7 @@ export default function Chatroom() {
   return (
     <div id="chatroom" className="page">
       <Loading />
+      <Modal content="메세지를 보낼 상대가 없습니다." />
       <Close handleClose={handleClose} />
       <section className="info">
         <img src={defaultUser} alt="" />

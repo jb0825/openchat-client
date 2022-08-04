@@ -19,7 +19,7 @@ export default function Modal(props) {
         </div>
         <section>{content}</section>
         <footer className={!cancel ? "" : "cancel_visible"}>
-          <button onClick={action}>확인</button>
+          <button onClick={!action ? handleClose : action}>확인</button>
           <button className="cancel" onClick={handleClose}>
             취소
           </button>
