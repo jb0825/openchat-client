@@ -11,6 +11,7 @@ export let connection = null;
 export let dataChannel = null;
 
 let roomname = null;
+let username = null;
 
 /**
  * dataChannel message send
@@ -18,9 +19,9 @@ let roomname = null;
  * @param {string} name
  * @param {string} message
  */
-export const messageSend = (name, message) => {
+export const messageSend = (message) => {
   const data = {
-    name: !name ? "anonymous" : name,
+    name: username,
     message,
   };
 
@@ -79,10 +80,11 @@ const handleMessage = (event) => {
 */
 
 /* CONNECTION & EVENT LISTENER */
-export const initConnection = (room) => {
+export const initConnection = (room, user) => {
   console.log("init Connection " + room);
 
   roomname = room;
+  username = user;
   connection = new RTCPeerConnection();
   connection.addEventListener("icecandidate", handleIce);
 };
@@ -90,9 +92,10 @@ export const initConnection = (room) => {
 export const terminate = () => {
   console.log("Connection Close...");
 
-  if (!dataChannel) dataChannel.close();
-  if (!connection) connection.close();
-  chatMsgList.length = 0;
+  socket.emit("leave-room", roomname);
+
+  if (dataChannel) dataChannel.close();
+  if (connection) connection.close();
 };
 
 const handleIce = (data) => {
@@ -163,6 +166,19 @@ export const receiveWelcome = async (name) => {
   connection.setLocalDescription(offer);
 
   socket.emit("offer", offer, roomname);
+};
+
+/**
+ * Receive event "leave" from Server
+ */
+export const receiveLeave = (name) => {
+  chatMsgList.push(
+    <div className="noti" key={chatMsgList.length}>
+      <span>{name} 님이 나갔습니다.</span>
+    </div>
+  );
+
+  terminate();
 };
 
 /**

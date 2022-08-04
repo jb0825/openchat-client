@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   initConnection,
+  terminate,
   receiveAnswer,
   receiveIce,
   receiveOffer,
@@ -18,13 +19,14 @@ import {
   dataChannel,
   messageSend,
   getUserCount,
+  receiveLeave,
 } from "webRTC/chat";
 import CalendarSmall from "assets/svg/CalendarSmall";
 import { dateToYears_Ko } from "util";
 import Modal, { toggle } from "components/Modal";
 
 // chat.js 에서 dataChannel message send / receive 에 사용할 변수
-export const chatMsgList = [];
+export let chatMsgList = [];
 
 export default function Chatroom() {
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ export default function Chatroom() {
   const [count, setCount] = useState(1);
   const [messageList, setMessageList] = useState([]);
 
-  const name = storage.get("name");
+  const name = !storage.get("name") ? "anonymous" : storage.get("name");
 
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
@@ -42,10 +44,14 @@ export default function Chatroom() {
     if (event.target.value.length > 0 && dataChannel !== null) btn.classList.add("active");
     else btn.classList.remove("active");
   };
-  const handleClose = () => navigate("/list");
+  const handleClose = () => {
+    terminate();
+    navigate("/list");
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    console.log(dataChannel.readyState, dataChannel);
     if (!dataChannel || dataChannel.readyState !== "open") {
       toggle();
       return;
@@ -54,7 +60,7 @@ export default function Chatroom() {
     const message = document.querySelector("#chatroom form input");
     if (message.value.length === 0) return;
 
-    messageSend(name, message.value);
+    messageSend(message.value);
     message.value = "";
   };
 
@@ -96,27 +102,28 @@ export default function Chatroom() {
     ]);
 
     /* SOCKET */
-    initConnection(state.roomname);
+    initConnection(state.roomname, name);
     getUserCount(state.roomname);
 
     socket.on("welcome", (name) => {
       setCount(count + 1);
       receiveWelcome(name);
     });
+    socket.on("leave", receiveLeave);
     socket.on("offer", receiveOffer);
     socket.on("answer", receiveAnswer);
     socket.on("ice", receiveIce);
     socket.on("user-count", setCount);
 
     return () => {
-      // 이거 안먹히는 이유 찾기
-      //delete messageList.push;
-
       socket.off("welcome");
+      socket.off("leave");
       socket.off("offer");
       socket.off("answer");
       socket.off("ice");
       socket.off("user-count");
+
+      chatMsgList = [];
     };
   }, []);
 
