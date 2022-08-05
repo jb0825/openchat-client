@@ -23,8 +23,8 @@ export default function List() {
 
   const handleAddChat = () => navigate("/create_chatroom");
 
-  const handleClick = (roomname, description, createDate) => {
-    navigate("/chatroom_info", { state: { roomname, description, createDate } });
+  const handleClick = (roomname, description, createDate, group) => {
+    navigate("/chatroom_info", { state: { roomname, description, createDate, group } });
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export default function List() {
         if (description.length === 0) description = "채팅방 설명이 없습니다.";
 
         appendList.push(
-          <li key={room} onClick={() => handleClick(room, description, createDate)}>
+          <li key={room} onClick={() => handleClick(room, description, createDate, rooms[room].group)}>
             <img src={defaultUser} alt="" />
             <div className="info">
               <div>{room}</div>

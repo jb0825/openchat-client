@@ -25,7 +25,7 @@ export default function CreateChatroom() {
     const roomname = document.getElementById("chatroom_name");
     const description = document.getElementById("description");
     const createDate = new Date();
-    const state = { roomname: roomname.value, createDate };
+    const state = { roomname: roomname.value, createDate, group: group.value };
 
     createRoom(roomname.value, description.value, createDate, group.value);
 

@@ -20,6 +20,11 @@ import {
   messageSend,
   getUserCount,
   receiveLeave,
+  welcomeMessage,
+  leaveMessage,
+  receiveMessage,
+  messageSendGroup,
+  setRoomnameGroup,
 } from "webRTC/chat";
 import CalendarSmall from "assets/svg/CalendarSmall";
 import { dateToYears_Ko } from "util";
@@ -32,7 +37,6 @@ export default function Chatroom() {
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const [roomname, setRoomname] = useState();
   const [count, setCount] = useState(1);
   const [messageList, setMessageList] = useState([]);
 
@@ -41,8 +45,8 @@ export default function Chatroom() {
   const handleInput = (event) => {
     const btn = document.querySelector(".send_btn");
 
-    if (event.target.value.length > 0 && dataChannel !== null) btn.classList.add("active");
-    else btn.classList.remove("active");
+    if (event.target.value.length === 0 || (state.group === "false" && !dataChannel)) btn.classList.remove("active");
+    else btn.classList.add("active");
   };
   const handleClose = () => {
     terminate();
@@ -51,14 +55,21 @@ export default function Chatroom() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const message = document.querySelector("#chatroom form input");
+    if (message.value.length === 0) return;
+
+    // for group message
+    if (state.group === "true") {
+      messageSendGroup(message.value);
+      message.value = "";
+      return;
+    }
+
+    // for private message
     if (!dataChannel || dataChannel.readyState !== "open") {
       toggle();
       return;
     }
-
-    const message = document.querySelector("#chatroom form input");
-    if (message.value.length === 0) return;
-
     messageSend(message.value);
     message.value = "";
   };
@@ -69,8 +80,6 @@ export default function Chatroom() {
   }, [messageList]);
 
   useEffect(() => {
-    console.log("component mount");
-
     // navigate 파라미터 없을때 redirect
     if (!state) {
       alert("접근할 수 없는 페이지입니다");
@@ -78,7 +87,6 @@ export default function Chatroom() {
       return;
     }
 
-    setRoomname(state.roomname);
     document.getElementById("loading").hidden = true;
 
     // chatMsgList 에 push 발생시 setMessageList 실행
@@ -103,25 +111,29 @@ export default function Chatroom() {
     ]);
 
     /* SOCKET */
-    initConnection(state.roomname, name);
-    getUserCount(state.roomname);
+    if (state.group === "false") {
+      console.log("private chat");
+      initConnection(state.roomname, name);
+      getUserCount(state.roomname);
 
-    socket.on("welcome", (name) => {
-      setCount(count + 1);
-      receiveWelcome(name);
-    });
-    socket.on("leave", (name) => {
-      setCount(count);
-      receiveLeave(name);
-    });
-    socket.on("offer", receiveOffer);
-    socket.on("answer", receiveAnswer);
-    socket.on("ice", receiveIce);
-    socket.on("user-count", setCount);
+      socket.on("welcome", receiveWelcome);
+      socket.on("leave", receiveLeave);
+      socket.on("offer", receiveOffer);
+      socket.on("answer", receiveAnswer);
+      socket.on("ice", receiveIce);
+      socket.on("user-count", setCount);
+    } else {
+      console.log("group chat");
+      setRoomnameGroup(state.roomname);
+      socket.on("welcome", welcomeMessage);
+      socket.on("leave", leaveMessage);
+      socket.on("message", receiveMessage);
+    }
 
     return () => {
       socket.off("welcome");
       socket.off("leave");
+      socket.off("message");
       socket.off("offer");
       socket.off("answer");
       socket.off("ice");
@@ -140,7 +152,7 @@ export default function Chatroom() {
         <img src={defaultUser} alt="" />
         <div>
           <div className="chatroom_name">
-            <strong>{roomname}</strong> ({count})
+            <strong>{state.roomname}</strong> ({count})
           </div>
           <div className="btns">
             <div>

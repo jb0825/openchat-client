@@ -14,13 +14,15 @@ export default function ChatroomInfo() {
   const [roomname, setRoomname] = useState();
   const [description, setDescription] = useState();
   const [createDate, setCreateDate] = useState();
+  const [group, setGroup] = useState("false");
   const [count, setCount] = useState(0);
   //const { room, description, createDate } = useLocation().state;
 
   const handleClose = () => navigate("/list");
   const handleButtonClick = () => {
     joinRoom(roomname);
-    navigate("/chatroom", { state: { roomname, createDate } });
+    getUserCount(roomname);
+    navigate("/chatroom", { state: { roomname, createDate, group } });
   };
 
   useEffect(() => {
@@ -36,6 +38,7 @@ export default function ChatroomInfo() {
     setRoomname(state.roomname);
     setDescription(state.description);
     setCreateDate(state.createDate);
+    setGroup(state.group);
 
     document.getElementById("loading").hidden = true;
 
@@ -50,7 +53,7 @@ export default function ChatroomInfo() {
       <Close handleClose={handleClose} />
       <img src={logo} alt="" />
       <div className="info">
-        <h3>그룹채팅</h3>
+        <h3>{group === "true" ? "그룹채팅" : "1:1 채팅"}</h3>
         <h2>{roomname}</h2>
         <p>{description}</p>
         <p className="create_date">

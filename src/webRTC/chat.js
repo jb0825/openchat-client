@@ -11,9 +11,10 @@ export let connection = null;
 export let dataChannel = null;
 
 let roomname = null;
+export const setRoomnameGroup = (name) => (roomname = name);
 let username = null;
 
-/* DATACHANNEL MESSAGE */
+/***** DATACHANNEL MESSAGE *****/
 /**
  * dataChannel message send
  * data = { name, message }
@@ -26,14 +27,7 @@ export const messageSend = (message) => {
     message,
   };
 
-  chatMsgList.push(
-    <div className="me" key={chatMsgList.length}>
-      <div>
-        <span>{dateToHoursAndMinutes(new Date())}</span>
-        <div>{message}</div>
-      </div>
-    </div>
-  );
+  myMessage(message);
   dataChannel.send(JSON.stringify(data));
 };
 
@@ -43,19 +37,7 @@ export const messageSend = (message) => {
  */
 const handleMessage = (event) => {
   const { name, message } = JSON.parse(event.data);
-
-  chatMsgList.push(
-    <div className="you" key={chatMsgList.length}>
-      <img src={defaultUser} alt="" />
-      <div>
-        <div className="user">{name}</div>
-        <div className="message">
-          <div>{message}</div>
-          <div className="time">{dateToHoursAndMinutes(new Date())}</div>
-        </div>
-      </div>
-    </div>
-  );
+  yourMessage(name, message);
 };
 
 // old code
@@ -80,7 +62,7 @@ const handleMessage = (event) => {
 };
 */
 
-/* CONNECTION & EVENT LISTENER */
+/***** CONNECTION & EVENT LISTENER *****/
 /**
  * Create Connection
  * @param {string} roomname
@@ -102,6 +84,7 @@ export const terminate = () => {
   console.log("Connection Close...");
 
   socket.emit("leave-room", roomname);
+  socket.emit("user-count", roomname);
   close();
 };
 
@@ -130,7 +113,7 @@ const handleDataChannel = (event) => {
   dataChannel.addEventListener("message", handleMessage);
 };
 
-/* SOCKET.EMIT FUNCTIONS */
+/***** SOCKET.EMIT FUNCTIONS *****/
 /**
  * Set username of Socket
  * @param {string} username
@@ -164,8 +147,18 @@ export const getUserCount = (roomname) => socket.emit("user-count", roomname);
  */
 export const joinRoom = (roomname) => socket.emit("join-room", roomname);
 
-/* SOCKET.ON FUNCTIONS */
+/**
+ * Send message to group chatroom
+ * @param {string} message
+ */
+export const messageSendGroup = (message) => {
+  myMessage(message);
+  console.log(roomname);
+  socket.emit("message", message, roomname);
+};
 
+/****** SOCKET.ON FUNCTIONS ******/
+/* RECEIVE EVENTS FOR PRIVATE CHAT (dataChannel) */
 /**
  * Receive event "welcome" from Server
  */
@@ -174,12 +167,7 @@ export const receiveWelcome = async (name) => {
 
   if (!connection) initConnection(roomname);
   getUserCount(roomname);
-
-  chatMsgList.push(
-    <div className="noti" key={chatMsgList.length}>
-      <span>{name} 님이 들어왔습니다.</span>
-    </div>
-  );
+  welcomeMessage(name);
 
   console.log("create datachannel");
   dataChannel = connection.createDataChannel("dataChannel");
@@ -198,12 +186,7 @@ export const receiveWelcome = async (name) => {
  */
 export const receiveLeave = (name) => {
   close();
-
-  chatMsgList.push(
-    <div className="noti" key={chatMsgList.length}>
-      <span>{name} 님이 나갔습니다.</span>
-    </div>
-  );
+  leaveMessage(name);
 };
 
 /**
@@ -239,3 +222,50 @@ export const receiveIce = (ice) => {
   console.log("receive ice candidate");
   connection.addIceCandidate(ice);
 };
+
+/* RECEIVE EVENTS FOR GROUP CHAT (socket) */
+/**
+ * Receive event "message" from Server
+ * @param {string} name
+ * @param {string} message
+ */
+export const receiveMessage = (name, message) => {
+  console.log("receive message");
+  yourMessage(name, message);
+};
+
+/***** MESSAGE WRITE FUNCTIONS ******/
+export const welcomeMessage = (name) =>
+  chatMsgList.push(
+    <div className="noti" key={chatMsgList.length}>
+      <span>{name} 님이 들어왔습니다.</span>
+    </div>
+  );
+export const leaveMessage = (name) =>
+  chatMsgList.push(
+    <div className="noti" key={chatMsgList.length}>
+      <span>{name} 님이 나갔습니다.</span>
+    </div>
+  );
+const myMessage = (message) =>
+  chatMsgList.push(
+    <div className="me" key={chatMsgList.length}>
+      <div>
+        <span>{dateToHoursAndMinutes(new Date())}</span>
+        <div>{message}</div>
+      </div>
+    </div>
+  );
+const yourMessage = (name, message) =>
+  chatMsgList.push(
+    <div className="you" key={chatMsgList.length}>
+      <img src={defaultUser} alt="" />
+      <div>
+        <div className="user">{name}</div>
+        <div className="message">
+          <div>{message}</div>
+          <div className="time">{dateToHoursAndMinutes(new Date())}</div>
+        </div>
+      </div>
+    </div>
+  );
