@@ -13,6 +13,7 @@ export let dataChannel = null;
 let roomname = null;
 let username = null;
 
+/* DATACHANNEL MESSAGE */
 /**
  * dataChannel message send
  * data = { name, message }
@@ -80,6 +81,11 @@ const handleMessage = (event) => {
 */
 
 /* CONNECTION & EVENT LISTENER */
+/**
+ * Create Connection
+ * @param {string} roomname
+ * @param {string} username
+ */
 export const initConnection = (room, user) => {
   console.log("init Connection " + room);
 
@@ -89,13 +95,28 @@ export const initConnection = (room, user) => {
   connection.addEventListener("icecandidate", handleIce);
 };
 
+/**
+ *  Disconnect when I leave the room
+ */
 export const terminate = () => {
   console.log("Connection Close...");
 
   socket.emit("leave-room", roomname);
+  close();
+};
 
-  if (dataChannel) dataChannel.close();
-  if (connection) connection.close();
+/**
+ * Connection close
+ */
+const close = () => {
+  if (dataChannel) {
+    dataChannel.close();
+    dataChannel = null;
+  }
+  if (connection) {
+    connection.close();
+    connection = null;
+  }
 };
 
 const handleIce = (data) => {
@@ -149,10 +170,13 @@ export const joinRoom = (roomname) => socket.emit("join-room", roomname);
  * Receive event "welcome" from Server
  */
 export const receiveWelcome = async (name) => {
+  console.log("receive welcome");
+
+  if (!connection) initConnection(roomname);
   getUserCount(roomname);
 
   chatMsgList.push(
-    <div className="noti" key="1">
+    <div className="noti" key={chatMsgList.length}>
       <span>{name} 님이 들어왔습니다.</span>
     </div>
   );
@@ -170,15 +194,16 @@ export const receiveWelcome = async (name) => {
 
 /**
  * Receive event "leave" from Server
+ * (Disconnect when another user leaves the room)
  */
 export const receiveLeave = (name) => {
+  close();
+
   chatMsgList.push(
     <div className="noti" key={chatMsgList.length}>
       <span>{name} 님이 나갔습니다.</span>
     </div>
   );
-
-  terminate();
 };
 
 /**

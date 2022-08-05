@@ -40,6 +40,8 @@ export default function ChatroomInfo() {
     document.getElementById("loading").hidden = true;
 
     socket.on("user-count", (count) => setCount(count));
+
+    return () => socket.off("user-count");
   }, []);
 
   return (

@@ -51,7 +51,6 @@ export default function Chatroom() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(dataChannel.readyState, dataChannel);
     if (!dataChannel || dataChannel.readyState !== "open") {
       toggle();
       return;
@@ -70,6 +69,8 @@ export default function Chatroom() {
   }, [messageList]);
 
   useEffect(() => {
+    console.log("component mount");
+
     // navigate 파라미터 없을때 redirect
     if (!state) {
       alert("접근할 수 없는 페이지입니다");
@@ -109,7 +110,10 @@ export default function Chatroom() {
       setCount(count + 1);
       receiveWelcome(name);
     });
-    socket.on("leave", receiveLeave);
+    socket.on("leave", (name) => {
+      setCount(count);
+      receiveLeave(name);
+    });
     socket.on("offer", receiveOffer);
     socket.on("answer", receiveAnswer);
     socket.on("ice", receiveIce);
