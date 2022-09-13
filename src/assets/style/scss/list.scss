@@ -136,3 +136,17 @@
     }
 }
 
+/* Mobile Device */
+@media (max-width: $mobile-width) {
+    #list {
+        & > nav {
+            height: 100%;
+        }
+
+        & > section {
+            width: calc(100vw - 80px);
+            header { width: calc(100vw - 120px); }
+            article { height: 100%; }
+        }
+    }
+}

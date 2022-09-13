@@ -221,4 +221,24 @@ strong {
   color: #342a2a;
 }
 
+/* Mobile Device */
+@media (max-width: 768px) {
+  #chatroom .info, #chatroom .main, #chatroom .send {
+    width: 100%;
+    left: 0;
+    border: none;
+  }
+  #chatroom .info {
+    top: 0;
+  }
+  #chatroom .main {
+    top: 100px;
+    padding-right: 20px;
+    height: calc(100vh - 200px);
+  }
+  #chatroom .send {
+    bottom: 0;
+  }
+}
+
 /*# sourceMappingURL=chatroom.css.map */

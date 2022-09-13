@@ -117,3 +117,14 @@ $gray1: #e3e3e3;
         }
     }
 }
+
+/* Mobile Device */
+@media (max-width: $mobile-width) {
+    #create_chatroom {
+        .btns {
+            left: unset;
+            right: 0;
+            bottom: 0;
+        }
+    }
+}

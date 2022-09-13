@@ -153,7 +153,6 @@ export const joinRoom = (roomname) => socket.emit("join-room", roomname);
  */
 export const messageSendGroup = (message) => {
   myMessage(message);
-  console.log(roomname);
   socket.emit("message", message, roomname);
 };
 

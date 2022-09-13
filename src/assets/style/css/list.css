@@ -110,4 +110,20 @@
   color: #bbbbbb;
 }
 
+/* Mobile Device */
+@media (max-width: 768px) {
+  #list > nav {
+    height: 100%;
+  }
+  #list > section {
+    width: calc(100vw - 80px);
+  }
+  #list > section header {
+    width: calc(100vw - 120px);
+  }
+  #list > section article {
+    height: 100%;
+  }
+}
+
 /*# sourceMappingURL=list.css.map */

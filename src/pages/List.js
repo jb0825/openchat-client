@@ -28,13 +28,10 @@ export default function List() {
   };
 
   useEffect(() => {
-    console.log("emit rooms");
     getRooms();
 
     socket.on("rooms", (rooms) => {
       if (isEmpty(rooms)) return;
-
-      console.log("receive rooms event");
       console.log(rooms);
 
       const appendList = [];

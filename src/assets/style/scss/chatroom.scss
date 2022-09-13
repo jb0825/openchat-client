@@ -249,3 +249,23 @@ strong { font-weight: bold; }
         }
     }
 }
+
+/* Mobile Device */
+@media (max-width: $mobile-width) {
+    #chatroom {
+        .info, .main, .send {
+            width: 100%;
+            left: 0;
+            border: none;
+        }
+        .info { top: 0; }
+        .main { 
+            top: 100px; 
+            padding-right: 20px;
+            height: calc(100vh - 200px);
+        }
+        .send {
+            bottom: 0;
+        }
+    }
+}
