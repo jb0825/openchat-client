@@ -12,7 +12,7 @@
 
 #
 
-pc 버전의 경우 아래와 같이 보임 :
+pc :
 
 ![1_pc](./src/assets/img/1_pc.PNG)
 
