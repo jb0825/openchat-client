@@ -139,7 +139,7 @@ export const createRoom = (roomname, description, createDate, group) =>
  * Get user count of chatroom
  * @param {string} roomname
  */
-export const getUserCount = (roomname) => socket.emit("user-count", roomname);
+export const getUserCount = (roomname) => socket.emit("get-user-count", roomname);
 
 /**
  * Join room

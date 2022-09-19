@@ -117,18 +117,24 @@ export default function Chatroom() {
       getUserCount(state.roomname);
 
       socket.on("welcome", receiveWelcome);
-      socket.on("leave", receiveLeave);
+
       socket.on("offer", receiveOffer);
       socket.on("answer", receiveAnswer);
       socket.on("ice", receiveIce);
-      socket.on("user-count", setCount);
     } else {
       console.log("group chat");
       setRoomnameGroup(state.roomname);
       socket.on("welcome", welcomeMessage);
-      socket.on("leave", leaveMessage);
       socket.on("message", receiveMessage);
     }
+    socket.on("leave", (name) => {
+      receiveLeave(name);
+      getUserCount(state.roomname);
+    });
+    socket.on("user-count", (count, roomname) => {
+      if (roomname !== state.roomname) return;
+      setCount(count);
+    });
 
     return () => {
       socket.off("welcome");

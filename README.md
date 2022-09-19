@@ -1,70 +1,38 @@
-# Getting Started with Create React App
+# open chat
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+카카오톡 디자인의 socket.io 채팅 (React, NodeJS)
 
-## Available Scripts
+- 1대1 채팅 : WebRTC (P2P)  
+  https://developer.mozilla.org/ko/docs/Web/API/WebRTC_API
 
-In the project directory, you can run:
+- 그룹 채팅 : socket.io  
+  https://socket.io/docs/v3/
 
-### `npm start`
+※ 채팅 외에 다른 기능은 없음
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+pc 버전의 경우 아래와 같이 보임 :
 
-### `npm test`
+![1_pc](./src/assets/img/1_pc.PNG)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+모바일 :
 
-### `npm run build`
+<div align="center">
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![1](./src/assets/img/1.PNG)  
+시작 화면
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![2](./src/assets/img/2.PNG) ![3](./src/assets/img/3.PNG)  
+이름 설정
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![4](./src/assets/img/4.PNG)  
+채팅방 생성
 
-### `npm run eject`
+![6](./src/assets/img/6.PNG)  
+목록
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![5](./src/assets/img/5.PNG)  
+채팅 화면
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</div>

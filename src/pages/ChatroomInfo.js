@@ -6,6 +6,7 @@ import { dateToYears } from "util";
 import { useEffect, useState } from "react";
 import Loading from "components/Loading";
 import { socket, getUserCount, joinRoom } from "webRTC/chat";
+import Modal, { toggle } from "components/Modal";
 
 export default function ChatroomInfo() {
   const navigate = useNavigate();
@@ -20,6 +21,11 @@ export default function ChatroomInfo() {
 
   const handleClose = () => navigate("/list");
   const handleButtonClick = () => {
+    if (group === "false" && count >= 2) {
+      toggle();
+      return;
+    }
+
     joinRoom(roomname);
     getUserCount(roomname);
     navigate("/chatroom", { state: { roomname, createDate, group } });
@@ -42,7 +48,11 @@ export default function ChatroomInfo() {
 
     document.getElementById("loading").hidden = true;
 
-    socket.on("user-count", (count) => setCount(count));
+    socket.on("user-count", (count, roomname) => {
+      console.log("receive usercount");
+      if (roomname !== state.roomname) return;
+      setCount(count);
+    });
 
     return () => socket.off("user-count");
   }, []);
@@ -50,6 +60,7 @@ export default function ChatroomInfo() {
   return (
     <div id="chatroom_info" className="page">
       <Loading />
+      <Modal content="채팅방에 참가할 수 없습니다." />
       <Close handleClose={handleClose} />
       <img src={logo} alt="" />
       <div className="info">
